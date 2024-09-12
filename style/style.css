@@ -1,0 +1,20 @@
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+img {
+    justify-content: center;
+}
+form{
+    flex-direction: column;
+}
+body{
+    background-image: url(/img/telaInicial.jpg);
+    backdrop-filter: blur(4px);
+    background-size: 100%;
+    height: 100vh;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
