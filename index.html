@@ -3,22 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ADMIN:Tela de comanda</title>
-    <link rel="stylesheet" href="/style/style.css">
+    <title>Login</title>
+    <link rel="stylesheet" href="./style/style.css">
 </head>
 <body>
-    <header>
-        <img src="./img/logoTelaInicial.png">
-    </header>
-    <div>
-        <form>
-            <button>Cardápio</button>
-            <button>Comanda</button>
-            <button>Pedido Cozinha</button>
-            <button>Úsuarios</button>
-        </form>
+    <div class="conteiner">
+        <div class="conteinerForm">
+            <form>
+                <label for="name">Nome de Usuário</label>
+                <input type="text" id="name" name="name">
+                <label for="password">Senha</label>
+                <input type="password" id="password" name="password">
+                <button type="submit" id="btn-cadastro" disabled>Entrar</button>
+            </form>
+        </div>
     </div>
-
-    
+    <script src="../scripts/scriptCadastro.js"></script>
 </body>
 </html>
