@@ -25,7 +25,7 @@ div
     border: 2px solid;
     border-radius: 10px;
     height: 20vh;
-    width: 100vh;
+    width: 70vh;
     display: flex;
     justify-content: center;
     flex-direction: row;
@@ -60,31 +60,7 @@ div
     font-family: 'Rubik';
 }
 
-.buttonpedidocozinha
-{
-    padding: 30px;
-    margin: 20px;
-    background-color: transparent;
-    border-radius: 10px;
-    border-style: solid;
-    border-color: #004EE4;
-    box-shadow: 0px 0px 10px #004EE4;
-    background-color: #FFC23A;
-    font-family: 'Rubik';
-}
 
-.buttonusuario
-{
-    padding: 30px;
-    margin: 20px;
-    background-color: transparent;
-    border-radius: 10px;
-    border-style: solid;
-    border-color: #E40000;
-    box-shadow: 0px 0px 10px #E40000;
-    background-color: #FFC23A;
-    font-family: 'Rubik';
-}
 
 
 
