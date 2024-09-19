@@ -5,14 +5,17 @@
 }
 body {
     font-family: 'Arial', sans-serif;
-    background-image: url(/img/);
+    background-image: linear-gradient(to right top, #ffe800, #e39728, #a65634, #56292a, #000000);
+    background-repeat: no-repeat;
+    background-size: cover;
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     height: 100vh;
+    flex-direction: column;
+
 }
 .conteiner {
-    margin-top: 120px;
     display: flex;
     justify-content: center;
     align-items: center;
