@@ -7,9 +7,7 @@ img {
     justify-content: center;
 }
 body{
-    background-image: url(/img/telaInicial.jpg);
-    backdrop-filter: blur(4px);
-    background-size: 100%;
+    background-image: linear-gradient(to right top, #ffe800, #e39728, #a65634, #56292a, #000000);
     height: 100vh;
     background-position: center;
     background-repeat: no-repeat;
