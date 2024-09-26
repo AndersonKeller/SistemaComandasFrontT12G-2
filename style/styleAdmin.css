@@ -86,6 +86,11 @@ div
     font-family: 'Rubik';
 }
 
+button:hover{
+    transform: scale(1.1);
+    transition: all 0.12s ease-in-out;
+    cursor: pointer;
+}
 
 
 
