@@ -3,9 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Admin:Tela de Seleção</title>
+    <link rel="stylesheet" href="/style/styleAdminCardapio.css">
 </head>
 <body>
-    
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Los Cardápio</title>
+</head>
+
+<body>
+    <div class="container">
+        <h2>LOS CARDÁPIO</h2>
+        <div id="items-list">
+            <div class="item">
+                <span>COCA COLA 600ml - 5.49</span>
+                <div>
+                    <button onclick="editItem(this)">✏️</button>
+                    <button onclick="removeItem(this)">❌</button>
+                </div>
+            </div>
+            <div class="item">
+                <span>FRANGO - 31.00</span>
+                <div>
+                    <button onclick="editItem(this)">✏️</button>
+                    <button onclick="removeItem(this)">❌</button>
+                </div>
+            </div>
+            <div class="item">
+                <span>FRANGUINHO - 20.99</span>
+                <div>
+                    <button onclick="editItem(this)">✏️</button>
+                    <button onclick="removeItem(this)">❌</button>
+                </div>
+            </div>
+            <div class="item">
+                <span>COCA COLA</span>
+                <div>
+                    <button onclick="editItem(this)">✏️</button>
+                    <button onclick="removeItem(this)">❌</button>
+                </div>
+            </div>
+            <div class="item">
+                <span>COCA COLA</span>
+                <div>
+                    <button onclick="editItem(this)">✏️</button>
+                    <button onclick="removeItem(this)">❌</button>
+                </div>
+            </div>
+        </div>
+        <a>
+        <button class="add-button" onclick="addItem()">+</button>
+        <button class="clear-all-button" onclick="clearAll()">Limpar Tudo</button>
+        </a>
+    </div>
+
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3>Editar Item</h3>
+            <input type="text" id="editInput" />
+            <button onclick="saveEdit()">Salvar</button>
+        </div>
+    </div>
+
+
+    <script src="/scripts/AdminCardapio.js">
+      
+    </script>
 </body>
-</html>git 
+
+
+</body>
+</html>
