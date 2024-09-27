@@ -16,16 +16,16 @@ body {
 }
 .background-container {
     position: absolute;
-    top: 0;
+    top: 26px;
     left: 0;
     width: 100%;
     height: 100%;
     z-index: -1;
-    transition: transform 0.5s ease;
+    transition: transform 0.8s ease;
 }
 .background-image {
     width: 100%;
-    height: 100%;
+    height: 70%;
     object-fit: cover;
 }
 .conteiner {
@@ -35,10 +35,11 @@ body {
 .conteinerForm {
     background: #fff;
     border: 2px solid #000000;
-    border-radius: 15px;
+    border-radius: 18px;
     padding: 20px;
     box-shadow: 0 0 80px rgba(255, 175, 56, 0.9);
-    width: 300px;
+    width: 310px;
+    height: 280px;
     text-align: center;
 }
 label {
@@ -50,7 +51,7 @@ label {
 input {
     width: 260px;
     padding: 10px;
-    border: 2px solid #8a8a8a;
+    border: 2px solid #3d3d3d;
     border-radius: 5px;
     margin-bottom: 15px;
     font-size: 16px;
