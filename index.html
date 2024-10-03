@@ -7,15 +7,20 @@
     <link rel="stylesheet" href="./style/style.css">
 </head>
 <body>
-    <div class="conteiner">
+    <div class="background-wrapper">
         <div class="background-container">
-            <img style="height: 450px;" src="./img/pngegg.png" alt="Background" class="background-image">
         </div>
+    </div>
+    <div class="loading-animation">
+        <div class="loading-circle"></div>
+    </div>
+    <div class="conteiner">
             <div class="conteinerForm">
+                <h1 style="color: aliceblue; font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;">Login</h1>
                 <form>
-                    <label for="name">Nome de Usuário</label>
+                    <label for="name">Nome de Usuário</label><span>👤</span>
                     <input type="text" id="name" name="name">
-                    <label for="password">Senha</label>
+                    <label for="password">Senha</label><span>🔒</span>
                     <input type="password" id="password" name="password">
                     <button type="submit" id="btn-cadastro">Entrar</button>
                 </form>

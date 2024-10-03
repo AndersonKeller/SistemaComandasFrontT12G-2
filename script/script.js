@@ -1,10 +1,7 @@
-const backgroundContainer = document.querySelector('.background-container');
-const button = document.getElementById('btn-cadastro');
-
-button.addEventListener('mouseover', () => {
-    backgroundContainer.style.transform = 'translateY(-200px)';
-});
-
-button.addEventListener('mouseout', () => {
-    backgroundContainer.style.transform = 'translateY()';
+document.addEventListener("DOMContentLoaded", function() {
+    const loadingAnimation = document.querySelector(".loading-animation");
+    loadingAnimation.style.display = "block";
+    setTimeout(function() {
+        loadingAnimation.style.display = "none";
+    }, 3000);
 });
