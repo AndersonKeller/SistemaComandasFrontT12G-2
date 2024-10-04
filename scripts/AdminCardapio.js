@@ -1,3 +1,7 @@
+import {baseUrl,headers} from "./api.js"
+const addBtn = document.querySelector(".add-button")
+addBtn.addEventListener("click",showAddItemModal)
+
 let items = [];
 let currentEditItemIndex = null;
 
@@ -49,10 +53,12 @@ function showAddItemModal() {
         <input type="text" id="addItemInput" placeholder="Nome do item" />
         <input type="number" id="addItemPrice" placeholder="Preço" step="0.01" />
         <input type="text" id="addItemDescription" placeholder="Descrição" />
-        <button onclick="addItem()">Adicionar</button>
+        <button id="addItem">Adicionar</button>
     `;
     const modal = createModal('addItemModal', modalContent);
     modal.style.display = 'block';
+    const addItemBtn = document.querySelector("#addItem")
+    addItemBtn.addEventListener("click",addItem)
 }
 
 function addItem() {
@@ -64,7 +70,10 @@ function addItem() {
     const description = descriptionInput.value.trim();
 
     if (name && !isNaN(price) && description) {
-        items.push({ nome: name, preco: price, descricao: description });
+        const newItem = { titulo: name, preco: price, descricao: description, possuiPreparo:false }
+        items.push(newItem);
+       
+        addCardapioItemApi(newItem)
         nameInput.value = '';
         priceInput.value = '';
         descriptionInput.value = '';
@@ -74,7 +83,16 @@ function addItem() {
         alert('Por favor, insira um nome, um preço e uma descrição válidos.');
     }
 }
-
+async function addCardapioItemApi(item){
+    const res = await fetch(`${baseUrl}/CardapioItems`,{
+        method:"POST",
+        headers:headers,
+        body:JSON.stringify(item)
+    })
+    console.log(res)
+    const resJson = await res.json()
+    console.log(resJson)
+}
 function removeItem(index) {
     items.splice(index, 1);
     loadItems();
