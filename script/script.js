@@ -1,7 +1,10 @@
 document.addEventListener("DOMContentLoaded", function() {
-    const loadingAnimation = document.querySelector(".loading-animation");
-    loadingAnimation.style.display = "block";
+    const loading = document.querySelector(".loading");
+    loading.style.display = "block";
+    const form = document.querySelector(".conteiner")
+    form.setAttribute("style","filter: blur(7px);")
     setTimeout(function() {
-        loadingAnimation.style.display = "none";
-    }, 3000);
+        loading.style.display = "none";
+        form.removeAttribute("style") 
+    }, 1500);
 });
