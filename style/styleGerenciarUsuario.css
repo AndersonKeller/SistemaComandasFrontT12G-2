@@ -1,0 +1,77 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+html{
+    height: 100%;
+    overflow: hidden;
+    flex-wrap: nowrap;
+}
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    background: linear-gradient(to right top, #000000, #0e001a, #27003d, #080014, #000000);
+    height: 100%;
+    overflow: hidden;
+    flex-wrap: nowrap;
+}
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: #711596;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    padding: 20px;
+}
+h1 {
+    color: #2c3e50;
+    text-align: center;
+    margin-bottom: 20px;
+}
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 10px;
+}
+th, td {
+    padding: 14px;
+}
+th {
+    background-color: #ffffff;
+    color: #000000;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+tr {
+    background-color: #ecf0f1;
+    transition: all 0.3s ease;
+}
+tr:hover {
+    background-color: #e0e6e8;
+    transform: translateY(-2px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+input[type="text"], input[type="email"], input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #bdc3c7;
+    border-radius: 4px;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+}
+input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
+}
+.edit-icon {
+    font-size: 18px;
+    color: #7f8c8d;
+    margin-left: 10px;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+.edit-icon:hover {
+    color: #3498db;
+}
