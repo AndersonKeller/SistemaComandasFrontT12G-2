@@ -37,7 +37,7 @@ async function loginAdminApi() {
         email:email.value,
         senha: password.value
     }
-    console.log(usuario,"usuario ")
+    console.log(usuario,"usuario")
     const res = await fetch("https://localhost:7183/api/Usuarios",{
         headers:header,
         method:"POST",
