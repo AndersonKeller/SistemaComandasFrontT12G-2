@@ -1,20 +1,43 @@
-let items = [];
-let currentEditItemIndex = null;
+import {baseUrl,headers} from "./api.js"
 
-function loadItems() {
+// Expondo funções globalmente
+window.removeItem = removeItem;
+window.editItem = editItem;
+window.saveEdit = saveEdit;
+window.showClearAllModal = showClearAllModal;
+window.clearAll = clearAll;
+window.closeModal = closeModal;
+
+const addBtn = document.querySelector(".add-button")
+addBtn.addEventListener("click",showAddItemModal)
+
+let currentEditItemIndex = null;
+let currentEditItem = null; // Nova variável para armazenar o item completo
+
+async function initial() {
+    const res = await fetch(`${baseUrl}/CardapioItems`, {
+        headers:headers
+    })
+    const resJson = await res.json()
+    loadItems(resJson);
+}
+
+function loadItems(items) {
+    console.log(items,"load")
     const itemsList = document.getElementById('items-list');
     itemsList.innerHTML = '';
-    items.forEach((item, index) => {
+    items.forEach((item) => {
         const itemElement = document.createElement('div');
         itemElement.className = 'item';
         itemElement.innerHTML = `
-            <span>${item.nome} - R$ ${item.preco.toFixed(2)}</span>
+            <span>${item.titulo} - R$ ${item.preco.toFixed(2)}</span>
             <p>${item.descricao}</p>
             <div>
-                <button onclick="editItem(${index})">✏️</button>
-                <button onclick="removeItem(${index})">❌</button>
+                <button onclick="window.editItem(${JSON.stringify(item).replace(/"/g, '&quot;')})">✏️</button>
+                <button onclick="window.removeItem('${item.id}')">❌</button>
             </div>
         `;
+        
         itemsList.appendChild(itemElement);
     });
 }
@@ -49,10 +72,12 @@ function showAddItemModal() {
         <input type="text" id="addItemInput" placeholder="Nome do item" />
         <input type="number" id="addItemPrice" placeholder="Preço" step="0.01" />
         <input type="text" id="addItemDescription" placeholder="Descrição" />
-        <button onclick="addItem()">Adicionar</button>
+        <button id="addItem">Adicionar</button>
     `;
     const modal = createModal('addItemModal', modalContent);
     modal.style.display = 'block';
+    const addItemBtn = document.querySelector("#addItem")
+    addItemBtn.addEventListener("click",addItem)
 }
 
 function addItem() {
@@ -64,37 +89,68 @@ function addItem() {
     const description = descriptionInput.value.trim();
 
     if (name && !isNaN(price) && description) {
-        items.push({ nome: name, preco: price, descricao: description });
+        const newItem = { 
+            titulo: name, 
+            preco: price, 
+            descricao: description, 
+            possuiPreparo: false 
+        }
+        addCardapioItemApi(newItem)
         nameInput.value = '';
         priceInput.value = '';
         descriptionInput.value = '';
-        closeModal('addItemModal');
-        loadItems();
     } else {
         alert('Por favor, insira um nome, um preço e uma descrição válidos.');
     }
 }
 
-function removeItem(index) {
-    items.splice(index, 1);
-    loadItems();
+async function addCardapioItemApi(item){
+    const res = await fetch(`${baseUrl}/CardapioItems`,{
+        method:"POST",
+        headers:headers,
+        body:JSON.stringify(item)
+    })
+    if(res.ok){
+        closeModal('addItemModal');
+        initial()
+    }
+    const resJson = await res.json()
+    console.log(resJson)
 }
 
-function editItem(index) {
-    currentEditItemIndex = index;
-    const item = items[index];
+async function removeItem(id) {
+    try {
+        const res = await fetch(`${baseUrl}/CardapioItems/${id}`, {
+            method: "DELETE",
+            headers: headers
+        });
+        
+        if(res.ok) {
+            initial();
+        } else {
+            alert('Erro ao remover o item.');
+        }
+    } catch (error) {
+        console.error('Erro ao remover item:', error);
+        alert('Erro ao remover o item.');
+    }
+}
+
+function editItem(item) {
+    currentEditItemIndex = item.id;
+    currentEditItem = item; // Armazenando o item completo
     const modalContent = `
         <h3>Editar Item</h3>
-        <input type="text" id="editInput" value="${item.nome}" />
-        <input type="number" id="editPrice" value="${item.preco.toFixed(2)}" />
+        <input type="text" id="editInput" value="${item.titulo}" />
+        <input type="number" id="editPrice" value="${item.preco.toFixed(2)}" step="0.01" />
         <input type="text" id="editDescription" value="${item.descricao}" />
-        <button onclick="saveEdit()">Salvar</button>
+        <button onclick="window.saveEdit()">Salvar</button>
     `;
     const modal = createModal('editModal', modalContent);
     modal.style.display = 'block';
 }
 
-function saveEdit() {
+async function saveEdit() {
     const nameInput = document.getElementById('editInput');
     const priceInput = document.getElementById('editPrice');
     const descriptionInput = document.getElementById('editDescription');
@@ -103,11 +159,73 @@ function saveEdit() {
     const description = descriptionInput.value.trim();
 
     if (name && !isNaN(price) && description) {
-        items[currentEditItemIndex] = { nome: name, preco: price, descricao: description };
-        closeModal('editModal');
-        loadItems();
+        const updatedItem = {
+            ...currentEditItem, // Mantém todos os campos originais
+            titulo: name,
+            preco: price,
+            descricao: description,
+        };
+
+        try {
+            const res = await fetch(`${baseUrl}/CardapioItems/${currentEditItemIndex}`, {
+                method: "PUT",
+                headers: {
+                    ...headers,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(updatedItem)
+            });
+
+            if(res.ok) {
+                closeModal('editModal');
+                initial();
+            } else {
+                const errorData = await res.json();
+                console.error('Erro na resposta:', errorData);
+                alert('Erro ao atualizar o item. Verifique o console para mais detalhes.');
+            }
+        } catch (error) {
+            console.error('Erro ao atualizar item:', error);
+            alert('Erro ao atualizar o item.');
+        }
     } else {
         alert('Por favor, insira um nome, um preço e uma descrição válidos.');
+    }
+}
+
+function showClearAllModal() {
+    const modalContent = `
+        <h3>Confirmar Exclusão</h3>
+        <p>Tem certeza que deseja remover todos os itens?</p>
+        <div class="modal-buttons">
+            <button class="confirm-button" onclick="window.clearAll()">Confirmar</button>
+            <button class="cancel-button" onclick="window.closeModal('clearAllModal')">Cancelar</button>
+        </div>
+    `;
+    const modal = createModal('clearAllModal', modalContent);
+    modal.style.display = 'block';
+}
+
+async function clearAll() {
+    try {
+        const res = await fetch(`${baseUrl}/CardapioItems`, {
+            headers: headers
+        });
+        const items = await res.json();
+        
+        // Delete all items sequentially
+        for (const item of items) {
+            await fetch(`${baseUrl}/CardapioItems/${item.id}`, {
+                method: "DELETE",
+                headers: headers
+            });
+        }
+        
+        closeModal('clearAllModal');
+        initial();
+    } catch (error) {
+        console.error('Erro ao limpar todos os itens:', error);
+        alert('Erro ao limpar todos os itens.');
     }
 }
 
@@ -119,24 +237,5 @@ function closeModal(modalId) {
     }
 }
 
-function showClearAllModal() {
-    const modalContent = `
-        <h3>Confirmar Exclusão</h3>
-        <p>Tem certeza que deseja remover todos os itens?</p>
-        <div class="modal-buttons">
-            <button class="confirm-button" onclick="clearAll()">Confirmar</button>
-            <button class="cancel-button" onclick="closeModal('clearAllModal')">Cancelar</button>
-        </div>
-    `;
-    const modal = createModal('clearAllModal', modalContent);
-    modal.style.display = 'block';
-}
-
-function clearAll() {
-    items = [];
-    loadItems();
-    closeModal('clearAllModal');
-}
-
-// Carregar itens ao iniciar
-loadItems();
+// Inicializar a aplicação
+initial();
