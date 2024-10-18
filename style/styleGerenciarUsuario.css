@@ -36,6 +36,9 @@ table {
     width: 100%;
     border-collapse: separate;
     border-spacing: 0 10px;
+    height: 300px;
+    overflow: auto;
+    display: block;
 }
 th, td {
     padding: 12px;
@@ -84,4 +87,18 @@ input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focu
 input{
     background: linear-gradient(226deg, #be8383, #b600ff);
     color: white;
+}
+::-webkit-scrollbar {
+    width: 3px;
+}
+  ::-webkit-scrollbar-track {
+    background: #ff000000;
+    border-radius: 90px;
+}
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(110deg, #1d0091, #7100a9);
+    border-radius: 200px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #8d00ce;
 }
