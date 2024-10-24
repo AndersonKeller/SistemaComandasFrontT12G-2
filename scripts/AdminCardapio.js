@@ -33,8 +33,8 @@ function loadItems(items) {
             <span>${item.titulo} - R$ ${item.preco.toFixed(2)}</span>
             <p>${item.descricao}</p>
             <div>
-                <button onclick="window.editItem(${JSON.stringify(item).replace(/"/g, '&quot;')})">✏️</button>
-                <button onclick="window.removeItem('${item.id}')">❌</button>
+                <button onclick="window.editItem(${JSON.stringify(item).replace(/"/g, '&quot;')})">✎</button>
+                <button onclick="window.removeItem('${item.id}')">✖</button>
             </div>
         `;
         

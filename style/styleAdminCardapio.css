@@ -30,6 +30,7 @@ body {
     height: 100%;
     background: linear-gradient(89deg, transparent, rgb(71 0 205 / 35%), transparent);
     animation: shine 8s infinite cubic-bezier(0.52, 0.02, 0.15, 0.52);
+    z-index: -1;
 }
 
 @keyframes shine {
@@ -71,10 +72,12 @@ h2::after {
     overflow-y: auto;
     margin-bottom: 20px;
     padding-right: 8px;
+    padding-left: 8px;
+    padding-top: 8px;
 }
 
 #items-list::-webkit-scrollbar {
-    width: 6px;
+    width: 7px;
 }
 
 #items-list::-webkit-scrollbar-track {
@@ -83,32 +86,35 @@ h2::after {
 }
 
 #items-list::-webkit-scrollbar-thumb {
-    background: linear-gradient(45deg, #9d4edd, #7b2cbf);
+    background: linear-gradient(45deg, #431caf, #7b2cbf);
     border-radius: 10px;
     border: 2px solid rgba(255, 255, 255, 0.1);
 }
 
 #items-list::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(45deg, #c77dff, #9d4edd);
+    background: linear-gradient(45deg, #c77dff, #5e36ca);
 }
 
 .item {
-    background: rgba(255, 255, 255, 0.95);
-    margin-bottom: 15px;
+    background: #ffffff;
+    margin-bottom: 16px;
     padding: 18px;
     display: flex;
+    font-family: math;
+    font-size: larger;
     justify-content: space-between;
     align-items: center;
     border-radius: 16px;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
     color: #333;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    box-shadow: inset 3px 4px 20px 0px rgb(0 0 0 / 71%);
 }
 
 .item:hover {
-    transform: translateY(-3px) scale(1.02);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
-    background: linear-gradient(45deg, #ffffff, #f8f7ff);
+    transform: translateY(-1px) scale(1.02);
+    box-shadow: inset 3px 4px 20px 0px rgb(0 0 0 / 71%);
+    background: linear-gradient(45deg, #5b1fff75, #ffffff, #ffffff, #5b1fff75);
+
 }
 
 .item button {
@@ -242,7 +248,7 @@ h2::after {
 
 .modal-content {
     background: linear-gradient(145deg, #ffffff, #f8f7ff);
-    margin: 15% auto;
+    margin: 12% auto;
     padding: 35px;
     width: 90%;
     max-width: 400px;
@@ -366,5 +372,47 @@ h2::after {
 }
 
 .confirm-button:hover::after, .cancel-button:hover::after {
+    opacity: 1;
+}
+
+#addItem {
+    background: linear-gradient(45deg, #00bd29, #004b10);
+    color: white;
+    box-shadow: 0 4px 15px rgb(0 0 0 / 71%);
+    padding: 14px 32px;
+    border: none;
+    cursor: pointer;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    min-width: 120px;
+    position: relative;
+}
+
+#addItem:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+#addItem:active {
+    transform: translateY(1px);
+}
+
+#addItem::after {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, #3b3a3a, #616161, #3b3a3a);
+    z-index: -1;
+    border-radius: 14px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+#addItem:hover::after {
     opacity: 1;
 }
