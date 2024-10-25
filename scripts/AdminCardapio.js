@@ -8,6 +8,8 @@ window.showClearAllModal = showClearAllModal;
 window.clearAll = clearAll;
 window.closeModal = closeModal;
 
+console.log(window)
+
 const addBtn = document.querySelector(".add-button")
 addBtn.addEventListener("click",showAddItemModal)
 

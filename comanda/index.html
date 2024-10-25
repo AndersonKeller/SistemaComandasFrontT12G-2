@@ -4,21 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/style/styleComanda.css">
-    <title>Document</title>
+    <title>Gerenciamento de Comandas</title>
 </head>
 <body>
 
-    <div class="container">
-        <div class="header">
-            <h1>Gerenciamento de Cardápio</h1>
-            <div>
-                <button class="add-button" id="addButton">Adicionar Item</button>
-                <button class="clear-button" id="clearButton">Limpar Tudo</button>
-            </div>
-        </div>
-        <div id="items-list" class="items-list"></div>
-    </div>
-    <script type="module" src="../scripts/comanda.js"></script>
+
+    <h1>Gerenciador de Comandas</h1>
+    <div id="Comandas-list"></div>
     
+
+    <button class="add-button">Adicionar Comanda</button>
+    <button class="clear-all-button" onclick="showClearAllModal()">Limpar Todas as Comandas</button>
+
+    <div id="comandas-list"></div>
+
+    <!-- Modal de Adicionar Comanda -->
+    <div id="addComandaModal" class="modal" style="display: none;"></div>
+
+    <!-- Modal de Editar Comanda -->
+    <div id="editModal" class="modal" style="display: none;"></div>
+
+    <!-- Modal de Confirmar Exclusão -->
+    <div id="clearAllModal" class="modal" style="display: none;"></div>
+
+    <script type="module" src="../scripts/comanda.js"></script>
 </body>
 </html>
