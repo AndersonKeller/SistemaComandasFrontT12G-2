@@ -105,15 +105,14 @@ h2::after {
     justify-content: space-between;
     align-items: center;
     border-radius: 16px;
-    transition: all 0.2s ease;
+    transition: initial 0.2s ease;
     color: #333;
-    box-shadow: inset 3px 4px 20px 0px rgb(0 0 0 / 71%);
 }
 
 .item:hover {
     transform: translateY(-1px) scale(1.02);
     box-shadow: inset 3px 4px 20px 0px rgb(0 0 0 / 71%);
-    background: linear-gradient(45deg, #5b1fff75, #ffffff, #ffffff, #5b1fff75);
+    background: linear-gradient(45deg, #5b1fff75, #ffffff, #ffffff, #ffffff, #ffffff, #ffffff, #ffffff, #ffffff, #5b1fff75);
 
 }
 
@@ -337,13 +336,13 @@ h2::after {
 }
 
 .confirm-button {
-    background: linear-gradient(45deg, #9a00ff, #c77dff);
+    background: linear-gradient(45deg, #00ce33, #086400);
     color: white;
     box-shadow: 0 4px 15px rgb(0 0 0 / 71%);
 }
 
 .cancel-button {
-    background: linear-gradient(45deg, #fe2d53, #ffe2e2);
+    background: linear-gradient(45deg, #818181, #a3a3a3);
     color: #ffffff;
     box-shadow: 0 4px 15px rgb(0 0 0 / 71%);
 }
@@ -415,4 +414,51 @@ h2::after {
 
 #addItem:hover::after {
     opacity: 1;
+}
+
+#editSaveEdit {
+    background: linear-gradient(45deg, #00c22a, #0b5e00);
+    color: white;
+    box-shadow: 0 4px 15px rgb(0 0 0 / 71%);
+    padding: 14px 32px;
+    border: none;
+    cursor: pointer;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    min-width: 120px;
+    position: relative;
+}
+
+#editSaveEdit:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+#editSaveEdit:active {
+    transform: translateY(1px);
+}
+
+#editSaveEdit::after {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, #3b3a3a, #616161, #3b3a3a);
+    z-index: -1;
+    border-radius: 14px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+#editSaveEdit:hover::after {
+    opacity: 1;
+}
+
+.columnXandPen{
+    display: flex;
+    flex-direction: column;
 }
