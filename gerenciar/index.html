@@ -9,50 +9,37 @@
 <body>
     <div class="container">
         <h1>Gerenciamento de Usuários</h1>
-        <div class="label-conteiner">
-            <label>Nome</label>
-            <label>E-mail</label>
-            <label>Senha</label>
+        <div class="label-container">
+            <span class="label-title">
+                <label>Nome</label>
+                <label>E-mail</label>
+                <label>Senha</label>
+            </span>
         </div>
-        <table>
-            <tbody>
-                <tr>
-                    <td><input type="text" value="João Silva"><span class="edit-icon">✎</span></td>
-                    <td><input type="email" value="joao@email.com"><span class="edit-icon">✎</span></td>
-                    <td><input readonly type="password" value="sduifhsduifhsuid"></td>
-                </tr>
-                <tr>
-                    <td><input type="text" value="Maria Santos"><span class="edit-icon">✎</span></td>
-                    <td><input type="email" value="maria@email.com"><span class="edit-icon">✎</span></td>
-                    <td><input readonly type="password" value="sdfsdfsdf"></td>
-                </tr>
-                <tr>
-                    <td><input type="text" value="Pedro Oliveira"><span class="edit-icon">✎</span></td>
-                    <td><input type="email" value="pedro@email.com"><span class="edit-icon">✎</span></td>
-                    <td><input readonly type="password" value="sdfhsuidf"></td>
-                </tr>
-                <tr>
-                    <td><input type="text" value="Pedro Oliveira"><span class="edit-icon">✎</span></td>
-                    <td><input type="email" value="pedro@email.com"><span class="edit-icon">✎</span></td>
-                    <td><input readonly type="password" value="sdfhsuidf"></td>
-                </tr>
-                <tr>
-                    <td><input type="text" value="Pedro Oliveira"><span class="edit-icon">✎</span></td>
-                    <td><input type="email" value="pedro@email.com"><span class="edit-icon">✎</span></td>
-                    <td><input readonly type="password" value="sdfhsuidf"></td>
-                </tr>
-                <tr>
-                    <td><input type="text" value="Pedro Oliveira"><span class="edit-icon">✎</span></td>
-                    <td><input type="email" value="pedro@email.com"><span class="edit-icon">✎</span></td>
-                    <td><input readonly type="password" value="sdfhsuidf"></td>
-                </tr>
-                <tr>
-                    <td><input type="text" value="Pedro Oliveira"><span class="edit-icon">✎</span></td>
-                    <td><input type="email" value="pedro@email.com"><span class="edit-icon">✎</span></td>
-                    <td><input readonly type="password" value="sdfhsuidf"></td>
-                </tr>
-            </tbody>
-        </table>
+        <div class="list">
+            <div class="user-item">
+                <div class="input-group">
+                    <input type="text" value="Pedro"><span class="edit-icon">✎</span>
+                </div>
+                <div class="input-group">
+                    <input type="email" value="pedro@email.com"><span class="edit-icon">✎</span>
+                </div>
+                <div class="input-group">
+                    <input readonly type="password" value="sduifhsduifhsuid">
+                </div>
+            </div>
+            <div class="user-item">
+                <div class="input-group">
+                    <input type="text" value="Sergio"><span class="edit-icon">✎</span>
+                </div>
+                <div class="input-group">
+                    <input type="email" value="sergio@email.com"><span class="edit-icon">✎</span>
+                </div>
+                <div class="input-group">
+                    <input readonly type="password" value="sdfsdfsdf">
+                </div>
+            </div>
+        </div>
     </div>
 
     <script src="../scripts/gerenciarUsuario.js"></script>
