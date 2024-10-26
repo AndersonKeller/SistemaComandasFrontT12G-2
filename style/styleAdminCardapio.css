@@ -134,7 +134,8 @@ h2::after {
     transform: rotate(15deg);
 }
 
-.add-button, .clear-all-button {
+.add-button{
+    margin-left: 96px;
     border: none;
     color: white;
     padding: 15px 28px;
