@@ -1,11 +1,74 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Sistema de Pedidos - Cozinha</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../style/stylePedidoCozinha.css">
 </head>
 <body>
-    
+    <div class="container">
+        <h1>Sistema de Pedidos</h1>
+        
+        <div class="kanban">
+            <div class="column preparo" id="preparo">
+                <h2>Em Preparo</h2>
+                <div class="item" data-status="preparo">
+                    Pedido #1
+                    <ul>
+                        <li>X-Burger</li>
+                        <li>Batata Frita</li>
+                    </ul>
+                </div>
+                <div class="item" data-status="preparo">
+                    Pedido #2
+                    <ul>
+                        <li>Pizza Margherita</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="column andamento" id="andamento">
+                <h2>Em Andamento</h2>
+            </div>
+
+            <div class="column finalizado" id="finalizado">
+                <h2>Finalizado</h2>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Iniciar Pedido -->
+    <div class="modal" id="modalIniciar">
+        <div class="modal-content">
+            <h2>Iniciar Preparo</h2>
+            <div class="modal-body">
+                <p>Deseja iniciar o preparo deste pedido?</p>
+                <div id="modalPedidoContent"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancelar" onclick="fecharModal('modalIniciar')">Cancelar</button>
+                <button class="btn-confirmar" id="btnIniciarComanda">Iniciar Comanda</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Finalizar Pedido -->
+    <div class="modal" id="modalFinalizar">
+        <div class="modal-content">
+            <h2>Finalizar Pedido</h2>
+            <div class="modal-body">
+                <p>Deseja finalizar este pedido?</p>
+                <div id="modalFinalizarContent"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancelar" onclick="fecharModal('modalFinalizar')">Cancelar</button>
+                <button class="btn-confirmar" id="btnFinalizarComanda">Finalizar Comanda</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../scripts/pedidoCozinha.js"></script>
 </body>
 </html>
