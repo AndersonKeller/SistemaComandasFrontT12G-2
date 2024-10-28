@@ -8,6 +8,8 @@ window.showClearAllModal = showClearAllModal;
 window.clearAll = clearAll;
 window.closeModal = closeModal;
 
+console.log(window)
+
 const addBtn = document.querySelector(".add-button")
 addBtn.addEventListener("click",showAddItemModal)
 
@@ -32,9 +34,9 @@ function loadItems(items) {
         itemElement.innerHTML = `
             <span>${item.titulo} - R$ ${item.preco.toFixed(2)}</span>
             <p>${item.descricao}</p>
-            <div>
-                <button onclick="window.editItem(${JSON.stringify(item).replace(/"/g, '&quot;')})">✏️</button>
-                <button onclick="window.removeItem('${item.id}')">❌</button>
+            <div class="columnXandPen">
+                <button onclick="window.editItem(${JSON.stringify(item).replace(/"/g, '&quot;')})">✎</button>
+                <button onclick="window.removeItem('${item.id}')">✖</button>
             </div>
         `;
         
@@ -144,7 +146,7 @@ function editItem(item) {
         <input type="text" id="editInput" value="${item.titulo}" />
         <input type="number" id="editPrice" value="${item.preco.toFixed(2)}" step="0.01" />
         <input type="text" id="editDescription" value="${item.descricao}" />
-        <button onclick="window.saveEdit()">Salvar</button>
+        <button id="editSaveEdit" onclick="window.saveEdit()">Salvar</button>
     `;
     const modal = createModal('editModal', modalContent);
     modal.style.display = 'block';
