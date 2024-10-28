@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin:Tela de Seleção</title>
+    <link rel="stylesheet" href="/style/styleAdmin.css">
+</head>
+<body>
+   
+    <header>
+        <img src="/img/logo.png">
+    </header>
+    
+    <div>
+        <form id="navigationForm" onsubmit="return false">
+            <button class="buttoncardapio" onclick="navegarPara('../cardapio/index.html')">Cardápio</button>
+            <button class="buttoncomanda" onclick="navegarPara('../comanda/index.html')">Comanda</button>
+            <button class="buttonpedidocozinha" onclick="navegarPara('../pedidocozinha/index.html')">Pedido Cozinha</button>
+            <button class="buttonusuario" onclick="navegarPara('../gerenciar/index.html')">Usuario</button>
+        </form>
+    </div>
+    <script src="../scripts/TelaSelecao.js"></script>
+</body>
+</html>
