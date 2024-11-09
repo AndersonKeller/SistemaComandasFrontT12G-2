@@ -447,12 +447,13 @@ function adicionarItemParaEdit(item) {
     const itemId = `item-${item.id}`;
     let existingItem = document.getElementById(itemId);
 
-    if (existingItem) {
-        const quantitySpan = existingItem.querySelector('.quantity');
-        const currentQuantity = parseInt(quantitySpan.textContent);
-        quantitySpan.textContent = currentQuantity + 1;
-        atualizarTotalParaEdit(item.preco);
-    } else {
+    // if (existingItem) {
+    //     const quantitySpan = existingItem.querySelector('.quantity');
+    //     const currentQuantity = parseInt(quantitySpan.textContent);
+    //     quantitySpan.textContent = currentQuantity + 1;
+    //     atualizarTotalParaEdit(item.preco);
+    // } else {
+    
         const li = document.createElement('li');
         
         li.id = itemId;
@@ -472,7 +473,7 @@ function adicionarItemParaEdit(item) {
         `;
         itensSelecionados.appendChild(li);
         atualizarTotalParaEdit(item.preco);
-    }
+    
 }
 
 function atualizarTotalParaEdit(valor) {
