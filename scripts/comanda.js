@@ -191,7 +191,7 @@ function decrementarQuantidade(itemId, preco) {
 }
 
 function incrementarQuantidade(itemId, preco) {
-    const quantitySpan = document.querySelector(`#${itemId} .quantity`);
+    const quantitySpan = document.querySelector(`#${itemId}.quantity`);
     const currentQuantity = parseInt(quantitySpan.textContent);
     quantitySpan.textContent = currentQuantity + 1;
     atualizarTotal(preco);
