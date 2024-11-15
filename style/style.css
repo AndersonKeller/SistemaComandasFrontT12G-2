@@ -56,20 +56,21 @@ input {
     outline: none;
 }
 button {
-    background-color: #ffffff;
     border: none;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    background-color: #ffffff;
     color: #000000;
     padding: 8px 24px;
-    font-size: 16px;
     border-radius: 5px;
     cursor: pointer;
 }
 button:hover {
-    box-shadow: 0px 0px 5px #af72ff,
-                0px 0px 25px #af72ff,
-                0px 0px 55px #af72ff;
-    transition: 0.9s ease;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.747);
 }
+
 .background-wrapper {
     position: absolute;
     top: 0;
