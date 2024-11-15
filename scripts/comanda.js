@@ -44,7 +44,7 @@ function loadComandas(comandas) {
         const itemsList = clone.querySelector('.items-list');
         comanda.comandaItens?.forEach(item => {
             const itemElement = document.createElement('div');
-            itemElement.textContent = `${item.quantidade}x ${item.titulo}`;
+            itemElement.textContent = `${item.titulo}`;
             itemsList.appendChild(itemElement);
         });
 
@@ -59,9 +59,8 @@ function loadComandas(comandas) {
 }
 
 function calcularTotalComanda(comanda) {
-   
     return comanda.comandaItens?.reduce((total, item) => 
-        total + (item.preco * (item.quantidade || 1)), 0) || 0;
+        total + item.preco, 0) || 0;
 }
 
 // Funções de Modal
@@ -152,23 +151,13 @@ function adicionarItem(item) {
     const itemId = `item-${item.id}`;
     let existingItem = document.getElementById(itemId);
   
-    if (existingItem) {
-        const quantitySpan = existingItem.querySelector('.quantity');
-        const currentQuantity = parseInt(quantitySpan.textContent);
-        quantitySpan.textContent = currentQuantity + 1;
-        atualizarTotal(item.preco);
-    } else {
+    if (!existingItem) {
         const li = document.createElement('li');
         li.id = itemId;
         
         li.className = 'selected-item';
         li.innerHTML = `
             <span>${item.titulo} - R$ ${item.preco.toFixed(2)}</span>
-            <div class="item-quantity">
-                <button class="quantity-btn minus" onclick="decrementarQuantidade('${itemId}', ${item.preco})">-</button>
-                <span class="quantity">1</span>
-                <button class="quantity-btn plus" onclick="incrementarQuantidade('${itemId}', ${item.preco})">+</button>
-            </div>
             <button class="remove-item" onclick="removerItem('${itemId}', ${item.preco})">
                 <i class="fas fa-trash"></i>
             </button>
@@ -178,38 +167,23 @@ function adicionarItem(item) {
     }
 }
 
-function decrementarQuantidade(itemId, preco) {
-    const quantitySpan = document.querySelector(`#${itemId} .quantity`);
-    const currentQuantity = parseInt(quantitySpan.textContent);
-
-    if (currentQuantity > 1) {
-        quantitySpan.textContent = currentQuantity - 1;
-        atualizarTotal(-preco);
-    } else {
-        removerItem(itemId, preco);
-    }
-}
-
-function incrementarQuantidade(itemId, preco) {
-    const quantitySpan = document.querySelector(`#${itemId} .quantity`);
-    const currentQuantity = parseInt(quantitySpan.textContent);
-    quantitySpan.textContent = currentQuantity + 1;
-    atualizarTotal(preco);
-}
-
 function removerItem(itemId, preco) {
-    const item = document.getElementById(`item-${itemId}`);
-    //const quantidade = parseInt(item.querySelector('.quantity').textContent);
-    //atualizarTotal(-(preco * quantidade));
-    console.log("aaalixera",itemId,item)
-    item.setAttribute("style","display:none;")
-   // item.remove();
+    console.log(itemId,"itemId")
+    const id = itemId.includes("-")?itemId.split("-")[1]:itemId
+    console.log(id,"id")
+    const item =Array.from( document.querySelectorAll(`#item-${id}`))
+    const findNone = item.find((li)=>!li.getAttribute("style"))
+    console.log(findNone,"item com o id")
+    findNone.setAttribute("style","display:none;");
+    atualizarTotal(-preco);
 }
 
 function atualizarTotal(valor) {
     const totalSpan = document.getElementById('totalComanda');
-    const totalAtual = parseFloat(totalSpan.textContent);
-    totalSpan.textContent = (totalAtual + valor).toFixed(2);
+    const totalSpanEdit = document.getElementById('editTotalComanda');
+    
+    const totalAtual = totalSpan ? parseFloat(totalSpan.textContent):parseFloat(totalSpanEdit.textContent);
+    totalSpan? totalSpan.textContent = (totalAtual + valor).toFixed(2):totalSpanEdit.textContent = (totalAtual + valor).toFixed(2);
 }
 
 async function addComanda() {
@@ -223,23 +197,19 @@ async function addComanda() {
     }
 
     const itens = Array.from(itensSelecionados).map(li => {
-        
-       
         const id = li.id.replace('item-', '');
         const item = cardapioItems.find(i => i.id === parseInt(id));
-        const quantidade = parseInt(li.querySelector('.quantity').textContent);
         return {
             idProduto: parseInt(id),
-            titulo: item.titulo??"",
-            preco: item.preco,
-            quantidade
+            titulo: item.titulo ?? "",
+            preco: item.preco
         };
     });
 
     const novaComanda = {
         numeroMesa: parseInt(mesaInput),
         nomeCliente: clienteInput.trim(),
-        cardapioItems: itens.map(item=>item.idProduto)
+        cardapioItems: itens.map(item => item.idProduto)
     };
 
     try {
@@ -315,22 +285,14 @@ function closeModal(modalId) {
 }
 
 function showEditComandaModal(comanda) {
-    
     const mesasOptions = mesasDisponiveis
         .map(mesa => `<option value="${mesa.numeroMesa}" ${mesa.numeroMesa === comanda.numeroMesa ? 'selected' : ''}>Mesa ${mesa.numeroMesa}</option>`)
         .join('');
 
-    // Gerando os itens selecionados com base na comanda existente
     const selectedItemsHtml = comanda.comandaItens.map(item => {
-      console.log(item)
         return `
             <li id="item-${item.idProduto}" data-id=${item.id} class="selected-item">
                 <span>${item.titulo} - R$ ${item.preco.toFixed(2)}</span>
-                <div class="item-quantity">
-                    <button class="quantity-btn minus" onclick="decrementarQuantidade('${item.idProduto}', ${item.preco})">-</button>
-                    <span class="quantity">${item.quantidade}</span>
-                    <button class="quantity-btn plus" onclick="incrementarQuantidade('${item.idProduto}', ${item.preco})">+</button>
-                </div>
                 <button class="remove-item" onclick="removerItem('${item.idProduto}', ${item.preco})">
                     <i class="fas fa-trash"></i>
                 </button>
@@ -371,59 +333,7 @@ function showEditComandaModal(comanda) {
     `;
 
     createModal('editComandaModal', 'Editar Comanda', modalContent);
-    
-    // Carregar os itens do cardápio para a edição
     loadCardapioItemsForEdit();
-
-    // Atualizar o total quando houver modificações nos itens
-    // document.getElementById('updateComanda').onclick = async () => {
-    //     const mesaInput = document.getElementById('editComandaMesa').value;
-    //     const clienteInput = document.getElementById('editComandaCliente').value;
-    //     const itensSelecionados = document.getElementById('editItensSelecionados').children;
-
-    //     if (!mesaInput || !clienteInput || itensSelecionados.length === 0) {
-    //         showNotification('Preencha todos os campos e adicione pelo menos um item.', 'error');
-    //         return;
-    //     }
-
-        // const updatedItems = Array.from(itensSelecionados).map(li => {
-        //     const id = li.id.replace('item-', '');
-        //     const item = cardapioItems.find(i => i.id === parseInt(id));
-        //     const quantidade = parseInt(li.querySelector('.quantity').textContent);
-        //     return {
-        //         idProduto: parseInt(id),
-        //         titulo: item.titulo,
-        //         preco: item.preco,
-        //         quantidade,incluir:true, cardapioItemId:parseInt(id),id:parseInt(id)
-        //     };
-        // });
-        
-        // const updatedComanda = {
-        //     id: comanda.id,
-        //     numeroMesa: parseInt(mesaInput),
-        //     nomeCliente: clienteInput.trim(),
-        //     comandaItens: updatedItems
-            
-        // };
-
-        // try {
-        //     console.log("ishdfuh")
-        //     const res = await fetch(`${baseUrl}/Comandas/${comanda.id}`, {
-        //         method: 'PUT',
-        //         headers: { headers, 'Content-Type': 'application/json' },
-        //         body: JSON.stringify(updatedComanda)
-        //     });
-
-        //     if (!res.ok) throw new Error('Erro ao atualizar a comanda');
-
-        //     closeModal('editComandaModal');
-        //     showNotification('Comanda atualizada com sucesso!', 'success');
-        //     initial();
-        // } catch (error) {
-        //     console.error('Erro ao editar a comanda:', error);
-        //     showNotification('Erro ao atualizar comanda.', 'error');
-        // }
-    // };
 }
 
 function loadCardapioItemsForEdit() {
@@ -445,34 +355,19 @@ function loadCardapioItemsForEdit() {
 function adicionarItemParaEdit(item) {
     const itensSelecionados = document.getElementById('editItensSelecionados');
     const itemId = `item-${item.id}`;
-    let existingItem = document.getElementById(itemId);
-
-    if (existingItem) {
-        const quantitySpan = existingItem.querySelector('.quantity');
-        const currentQuantity = parseInt(quantitySpan.textContent);
-        quantitySpan.textContent = currentQuantity + 1;
-        atualizarTotalParaEdit(item.preco);
-    } else {
-        const li = document.createElement('li');
-        
-        li.id = itemId;
-        li.setAttribute("name", "novoitem")
-
-        li.className = 'selected-item';
-        li.innerHTML = `
-            <span>${item.titulo} - R$ ${item.preco.toFixed(2)}</span>
-            <div class="item-quantity">
-                <button class="quantity-btn minus" onclick="decrementarQuantidade('${itemId}', ${item.preco})">-</button>
-                <span class="quantity">1</span>
-                <button class="quantity-btn plus" onclick="incrementarQuantidade('${itemId}', ${item.preco})">+</button>
-            </div>
-            <button class="remove-item" onclick="removerItem('${itemId}', ${item.preco})">
-                <i class="fas fa-trash"></i>
-            </button>
-        `;
-        itensSelecionados.appendChild(li);
-        atualizarTotalParaEdit(item.preco);
-    }
+    
+    const li = document.createElement('li');
+    li.id = itemId;
+    li.setAttribute("name", "novoitem");
+    li.className = 'selected-item';
+    li.innerHTML = `
+        <span>${item.titulo} - R$ ${item.preco.toFixed(2)}</span>
+        <button class="remove-item" onclick="removerItem('${itemId}', ${item.preco})">
+            <i class="fas fa-trash"></i>
+        </button>
+    `;
+    itensSelecionados.appendChild(li);
+    atualizarTotalParaEdit(item.preco);
 }
 
 function atualizarTotalParaEdit(valor) {
@@ -481,15 +376,10 @@ function atualizarTotalParaEdit(valor) {
     totalSpan.textContent = (totalAtual + valor).toFixed(2);
 }
 
-
-
 async function editComanda(comanda) {
-    
     try {
-        // Open the edit modal and populate it with the comanda data
         showEditComandaModal(comanda);
 
-        // Handle the form submission to update the comanda
         const updateBtn = document.getElementById('updateComanda');
         updateBtn.onclick = async () => {
             const mesaInput = document.getElementById('editComandaMesa').value;
@@ -503,15 +393,12 @@ async function editComanda(comanda) {
 
             const updatedItems = Array.from(itensSelecionados).map(li => {
                 const id = li.id.replace('item-', '');
-                
                 const item = cardapioItems.find(i => i.id === parseInt(id));
-               console.log(itensSelecionados,"suicidio",item)
-                const quantidade = parseInt(li.querySelector('.quantity').textContent);
                 return {
-                    id: li.getAttribute("style")?parseInt(li.getAttribute("data-id")): 0,
-                    incluir:li.getAttribute("name")? true : false,
-                    cardapioItemId:parseInt(item.id),
-                    excluir:li.getAttribute("style")?true:false                    
+                    id: li.getAttribute("style") ? parseInt(li.getAttribute("data-id")) : 0,
+                    incluir: li.getAttribute("name") ? true : false,
+                    cardapioItemId: parseInt(item.id),
+                    excluir: li.getAttribute("style") ? true : false                    
                 };
             });
 
@@ -521,7 +408,7 @@ async function editComanda(comanda) {
                 nomeCliente: clienteInput.trim(),
                 comandaItens: updatedItems
             };
-            console.log(22222)
+
             const res = await fetch(`${baseUrl}/Comandas/${comanda.id}`, {
                 method: 'PUT',
                 headers: { headers, 'Content-Type': 'application/json' },
@@ -536,13 +423,10 @@ async function editComanda(comanda) {
         };
     } catch (error) {
         console.error('Erro ao editar a comanda:', error);
-        
     }
 }
 
 // Funções Window
-window.decrementarQuantidade = decrementarQuantidade;
-window.incrementarQuantidade = incrementarQuantidade;
 window.removerItem = removerItem;
 window.deleteComanda = deleteComanda;
 window.showDeleteConfirmModal = showDeleteConfirmModal;
