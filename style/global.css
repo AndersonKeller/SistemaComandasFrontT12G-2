@@ -3,3 +3,14 @@
     margin: 0;
     padding: 0;
 }
+
+header{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(90deg, #2c0947, #0e001a, #030004, #080014, #2c0947);
+}
