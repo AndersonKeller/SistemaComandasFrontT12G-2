@@ -21,7 +21,7 @@ div
     border: 2px solid white;
     border-radius: 10px;
     height: 28vh;
-    width: 130vh;
+    width: 150vh;
     display: flex;
     justify-content: center;
     flex-direction: row;
@@ -33,7 +33,8 @@ div
 .buttoncardapio,
 .buttoncomanda,
 .buttonpedidocozinha,
-.buttonusuario {
+.buttonusuario,
+.buttonmesa {
     padding: 30px;
     margin: 20px;
     background-color: #0c0116;
