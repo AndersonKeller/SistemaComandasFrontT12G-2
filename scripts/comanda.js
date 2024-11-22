@@ -42,9 +42,27 @@ function loadComandas(comandas) {
         clone.querySelector('.total').textContent = `Total: R$ ${calcularTotalComanda(comanda).toFixed(2)}`;
         
         const itemsList = clone.querySelector('.items-list');
-        comanda.comandaItens?.forEach(item => {
+        
+        // Agrupa os itens por título e conta as ocorrências
+        const itensAgrupados = comanda.comandaItens?.reduce((acc, item) => {
+            if (!acc[item.titulo]) {
+                acc[item.titulo] = {
+                    ...item,
+                    quantidade: 1,
+                    totalPreco: item.preco
+                };
+            } else {
+                acc[item.titulo].quantidade += 1;
+                acc[item.titulo].totalPreco += item.preco;
+            }
+            return acc;
+        }, {});
+
+        // Cria os elementos para cada item agrupado
+        Object.values(itensAgrupados || {}).forEach(item => {
             const itemElement = document.createElement('div');
-            itemElement.textContent = `${item.titulo}`;
+            itemElement.className = 'comanda-item';
+            itemElement.textContent = `${item.quantidade}x ${item.titulo} - R$ ${item.totalPreco.toFixed(2)}`;
             itemsList.appendChild(itemElement);
         });
 
