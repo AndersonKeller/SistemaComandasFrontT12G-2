@@ -24,7 +24,8 @@ body {
     padding: 20px;
 }
 
-header {
+span {
+    margin-top: 70px;
     display: flex;
     justify-content: space-between;
     align-items: center;
