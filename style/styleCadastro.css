@@ -1,14 +1,9 @@
-* {
-    margin: 0;
-    padding: 0;
-}
 body, html {
     height: 100%;
     overflow: hidden;
     flex-wrap: nowrap;
 }
 body {
-    font-family: 'Arial', sans-serif;
     background: linear-gradient(to right top, #000000, #0e001a, #27003d, #080014, #000000);
     display: flex;
     justify-content: center;
