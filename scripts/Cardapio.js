@@ -14,7 +14,7 @@ const addBtn = document.querySelector(".add-button")
 addBtn.addEventListener("click",showAddItemModal)
 
 let currentEditItemIndex = null;
-let currentEditItem = null; // Nova variável para armazenar o item completo
+let currentEditItem = null;
 
 async function initial() {
     const res = await fetch(`${baseUrl}/CardapioItems`, {
@@ -34,6 +34,7 @@ function loadItems(items) {
         itemElement.innerHTML = `
             <span>${item.titulo} - R$ ${item.preco.toFixed(2)}</span>
             <p>${item.descricao}</p>
+            <p>Possui preparo: ${item.possuiPreparo ? 'Sim' : 'Não'}</p>
             <div class="columnXandPen">
                 <button onclick="window.editItem(${JSON.stringify(item).replace(/"/g, '&quot;')})">✎</button>
                 <button onclick="window.removeItem('${item.id}')">✖</button>
@@ -74,6 +75,10 @@ function showAddItemModal() {
         <input type="text" id="addItemInput" placeholder="Nome do item" />
         <input type="number" id="addItemPrice" placeholder="Preço" step="0.01" />
         <input type="text" id="addItemDescription" placeholder="Descrição" />
+        <div class="checkbox-container">
+            <input type="checkbox" id="addItemPreparo" />
+            <label for="addItemPreparo">Possui preparo</label>
+        </div>
         <button id="addItem">Adicionar</button>
     `;
     const modal = createModal('addItemModal', modalContent);
@@ -86,21 +91,24 @@ function addItem() {
     const nameInput = document.getElementById('addItemInput');
     const priceInput = document.getElementById('addItemPrice');
     const descriptionInput = document.getElementById('addItemDescription');
+    const preparoInput = document.getElementById('addItemPreparo');
     const name = nameInput.value.trim();
     const price = parseFloat(priceInput.value);
     const description = descriptionInput.value.trim();
+    const possuiPreparo = preparoInput.checked;
 
     if (name && !isNaN(price) && description) {
         const newItem = { 
             titulo: name, 
             preco: price, 
             descricao: description, 
-            possuiPreparo: false 
+            possuiPreparo: possuiPreparo 
         }
         addCardapioItemApi(newItem)
         nameInput.value = '';
         priceInput.value = '';
         descriptionInput.value = '';
+        preparoInput.checked = false;
     } else {
         alert('Por favor, insira um nome, um preço e uma descrição válidos.');
     }
@@ -140,12 +148,16 @@ async function removeItem(id) {
 
 function editItem(item) {
     currentEditItemIndex = item.id;
-    currentEditItem = item; // Armazenando o item completo
+    currentEditItem = item;
     const modalContent = `
         <h3>Editar Item</h3>
         <input type="text" id="editInput" value="${item.titulo}" />
         <input type="number" id="editPrice" value="${item.preco.toFixed(2)}" step="0.01" />
         <input type="text" id="editDescription" value="${item.descricao}" />
+        <div class="checkbox-container">
+            <input type="checkbox" id="editItemPreparo" ${item.possuiPreparo ? 'checked' : ''} />
+            <label for="editItemPreparo">Possui preparo</label>
+        </div>
         <button id="editSaveEdit" onclick="window.saveEdit()">Salvar</button>
     `;
     const modal = createModal('editModal', modalContent);
@@ -156,16 +168,19 @@ async function saveEdit() {
     const nameInput = document.getElementById('editInput');
     const priceInput = document.getElementById('editPrice');
     const descriptionInput = document.getElementById('editDescription');
+    const preparoInput = document.getElementById('editItemPreparo');
     const name = nameInput.value.trim();
     const price = parseFloat(priceInput.value);
     const description = descriptionInput.value.trim();
+    const possuiPreparo = preparoInput.checked;
 
     if (name && !isNaN(price) && description) {
         const updatedItem = {
-            ...currentEditItem, // Mantém todos os campos originais
+            ...currentEditItem,
             titulo: name,
             preco: price,
             descricao: description,
+            possuiPreparo: possuiPreparo
         };
 
         try {
