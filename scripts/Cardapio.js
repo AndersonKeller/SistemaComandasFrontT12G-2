@@ -32,8 +32,9 @@ function loadItems(items) {
         const itemElement = document.createElement('div');
         itemElement.className = 'item';
         itemElement.innerHTML = `
-            <span>${item.titulo} - R$ ${item.preco.toFixed(2)}</span>
+            <span>${item.titulo} 
             <p>${item.descricao}</p>
+            R$ ${item.preco.toFixed(2)}</span>
             <p>Possui preparo: ${item.possuiPreparo ? 'Sim' : 'Não'}</p>
             <div class="columnXandPen">
                 <button onclick="window.editItem(${JSON.stringify(item).replace(/"/g, '&quot;')})">✎</button>
@@ -73,11 +74,11 @@ function showAddItemModal() {
     const modalContent = `
         <h3>Adicionar Item</h3>
         <input type="text" id="addItemInput" placeholder="Nome do item" />
-        <input type="number" id="addItemPrice" placeholder="Preço" step="0.01" />
         <input type="text" id="addItemDescription" placeholder="Descrição" />
+        <input type="number" id="addItemPrice" placeholder="Preço" step="0.01" />
         <div class="checkbox-container">
+        <label for="addItemPreparo">Possui preparo</label>
             <input type="checkbox" id="addItemPreparo" />
-            <label for="addItemPreparo">Possui preparo</label>
         </div>
         <button id="addItem">Adicionar</button>
     `;
@@ -152,11 +153,11 @@ function editItem(item) {
     const modalContent = `
         <h3>Editar Item</h3>
         <input type="text" id="editInput" value="${item.titulo}" />
-        <input type="number" id="editPrice" value="${item.preco.toFixed(2)}" step="0.01" />
         <input type="text" id="editDescription" value="${item.descricao}" />
+        <input type="number" id="editPrice" value="${item.preco.toFixed(2)}" step="0.01" />
         <div class="checkbox-container">
+        <label for="editItemPreparo">Possui preparo</label>
             <input type="checkbox" id="editItemPreparo" ${item.possuiPreparo ? 'checked' : ''} />
-            <label for="editItemPreparo">Possui preparo</label>
         </div>
         <button id="editSaveEdit" onclick="window.saveEdit()">Salvar</button>
     `;

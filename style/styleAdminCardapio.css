@@ -100,10 +100,12 @@ h2::after {
     display: flex;
     font-family: math;
     font-size: larger;
-    justify-content: space-between;
-    align-items: center;
     border-radius: 16px;
     color: #333;
+    text-wrap: balance;
+    word-break: break-word;
+    flex-direction: column;
+    align-items: flex-start;
 }
 
 .item button {
@@ -451,5 +453,7 @@ h2::after {
 
 .columnXandPen{
     display: flex;
-    flex-direction: column;
-}
+        flex-direction: row;
+        margin-left: 250px;
+        margin-top: -35px;
+    }
