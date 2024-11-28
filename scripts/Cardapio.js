@@ -7,6 +7,7 @@ window.saveEdit = saveEdit;
 window.showClearAllModal = showClearAllModal;
 window.clearAll = clearAll;
 window.closeModal = closeModal;
+window.showErrorModal = showErrorModal;
 
 console.log(window)
 
@@ -15,6 +16,18 @@ addBtn.addEventListener("click",showAddItemModal)
 
 let currentEditItemIndex = null;
 let currentEditItem = null;
+
+function showErrorModal(message) {
+    const modalContent = `
+        <h3>Erro</h3>
+        <p>${message}</p>
+        <div class="modal-buttons">
+            <button class="confirm-button" onclick="window.closeModal('errorModal')">OK</button>
+        </div>
+    `;
+    const modal = createModal('errorModal', modalContent);
+    modal.style.display = 'block';
+}
 
 async function initial() {
     const res = await fetch(`${baseUrl}/CardapioItems`, {
@@ -73,9 +86,9 @@ function createModal(id, content) {
 function showAddItemModal() {
     const modalContent = `
         <h3>Adicionar Item</h3>
-        <input type="text" id="addItemInput" placeholder="Nome do item" />
-        <input type="text" id="addItemDescription" placeholder="Descrição" />
-        <input type="number" id="addItemPrice" placeholder="Preço" step="0.01" />
+        <input type="text" id="addItemInput" placeholder="Nome do item" required />
+        <input type="text" id="addItemDescription" placeholder="Descrição" required />
+        <input type="number" id="addItemPrice" placeholder="Preço" step="0.01" required />
         <div class="checkbox-container">
         <label for="addItemPreparo">Possui preparo</label>
             <input type="checkbox" id="addItemPreparo" />
@@ -85,7 +98,7 @@ function showAddItemModal() {
     const modal = createModal('addItemModal', modalContent);
     modal.style.display = 'block';
     const addItemBtn = document.querySelector("#addItem")
-    addItemBtn.addEventListener("click",addItem)
+    addItemBtn.addEventListener("click", addItem)
 }
 
 function addItem() {
@@ -111,7 +124,7 @@ function addItem() {
         descriptionInput.value = '';
         preparoInput.checked = false;
     } else {
-        alert('Por favor, insira um nome, um preço e uma descrição válidos.');
+        showErrorModal('Por favor, insira um nome, um preço e uma descrição válidos.');
     }
 }
 
@@ -139,11 +152,11 @@ async function removeItem(id) {
         if(res.ok) {
             initial();
         } else {
-            alert('Erro ao remover o item.');
+            showErrorModal('Erro ao remover o item.');
         }
     } catch (error) {
         console.error('Erro ao remover item:', error);
-        alert('Erro ao remover o item.');
+        showErrorModal('Erro ao remover o item.');
     }
 }
 
@@ -152,9 +165,10 @@ function editItem(item) {
     currentEditItem = item;
     const modalContent = `
         <h3>Editar Item</h3>
-        <input type="text" id="editInput" value="${item.titulo}" />
-        <input type="text" id="editDescription" value="${item.descricao}" />
-        <input type="number" id="editPrice" value="${item.preco.toFixed(2)}" step="0.01" />
+       
+        <input type="text" id="editInput" placeholder="Nome do item" value="${item.titulo}" required />
+        <input type="text" id="editDescription" placeholder="Descrição" value="${item.descricao}" required />
+        <input type="number" id="editPrice" placeholder="Preço" value="${item.preco.toFixed(2)}" step="0.01" required />
         <div class="checkbox-container">
         <label for="editItemPreparo">Possui preparo</label>
             <input type="checkbox" id="editItemPreparo" ${item.possuiPreparo ? 'checked' : ''} />
@@ -200,14 +214,14 @@ async function saveEdit() {
             } else {
                 const errorData = await res.json();
                 console.error('Erro na resposta:', errorData);
-                alert('Erro ao atualizar o item. Verifique o console para mais detalhes.');
+                showErrorModal('Erro ao atualizar o item. Verifique o console para mais detalhes.');
             }
         } catch (error) {
             console.error('Erro ao atualizar item:', error);
-            alert('Erro ao atualizar o item.');
+            showErrorModal('Erro ao atualizar o item.');
         }
     } else {
-        alert('Por favor, insira um nome, um preço e uma descrição válidos.');
+        showErrorModal('Por favor, insira um nome, um preço e uma descrição válidos.');
     }
 }
 
@@ -243,7 +257,7 @@ async function clearAll() {
         initial();
     } catch (error) {
         console.error('Erro ao limpar todos os itens:', error);
-        alert('Erro ao limpar todos os itens.');
+        showErrorModal('Erro ao limpar todos os itens.');
     }
 }
 
