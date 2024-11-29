@@ -1,4 +1,10 @@
 import {baseUrl,headers} from "./api.js"
+let isAdmin = false
+const usuarioSalvo = localStorage.getItem("usuario");
+        if(usuarioSalvo === "admin@admin.com"){
+            isAdmin =true
+        }
+
 
 // Expondo funções globalmente
 window.removeItem = removeItem;
@@ -49,10 +55,10 @@ function loadItems(items) {
             <p>${item.descricao}</p>
             R$ ${item.preco.toFixed(2)}</span>
             <p>Possui preparo: ${item.possuiPreparo ? 'Sim' : 'Não'}</p>
-            <div class="columnXandPen">
-                <button onclick="window.editItem(${JSON.stringify(item).replace(/"/g, '&quot;')})">✎</button>
-                <button onclick="window.removeItem('${item.id}')">✖</button>
-            </div>
+            ${isAdmin? `<div class="columnXandPen">
+             <button  onclick="window.editItem(${JSON.stringify(item).replace(/"/g, '&quot;')})"  >✎</button>
+              <button onclick="window.removeItem('${item.id}')">✖</button>
+            </div>`:""}
         `;
         
         itemsList.appendChild(itemElement);
@@ -268,6 +274,6 @@ function closeModal(modalId) {
         document.body.removeChild(modal);
     }
 }
-
+        
 // Inicializar a aplicação
 initial();
