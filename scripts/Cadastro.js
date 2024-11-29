@@ -38,7 +38,7 @@ async function loginAdminApi() {
         senha: password.value
     }
     console.log(usuario,"usuario")
-    const res = await fetch("https://localhost:7183/api/Usuarios",{
+    const res = await fetch("https://comandaapisergiot12.somee.com/api",{
         headers:header,
         method:"POST",
         body:JSON.stringify(usuario)

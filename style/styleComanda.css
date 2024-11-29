@@ -18,14 +18,15 @@
 }
 
 body {
-    background-color: var(--background-color);
-    color: var(--text-color);
+    background: linear-gradient(to right top, #000000, #0e001a, #27003d, #080014, #000000);
     line-height: 1.6;
     padding: 20px;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
 }
 
 span {
-    margin-top: 70px;
+    margin-top: 90px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -163,7 +164,7 @@ h1 {
 .close {
     position: absolute;
     right: 20px;
-    top: 20px;
+    top: -87px;
     font-size: 24px;
     cursor: pointer;
     color: #666;
