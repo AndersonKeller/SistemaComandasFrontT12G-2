@@ -8,24 +8,10 @@ body {
     background: linear-gradient(to right top, #000000, #0e001a, #27003d, #080014, #000000);
     justify-content: center;
     align-items: center;
-    margin-top: 40px;
-}
-
-body, html {
-    height: 100%;
-    overflow: hidden;
-    flex-wrap: nowrap;
-}
-
-body {
-    background: linear-gradient(to right top, #000000, #0e001a, #27003d, #080014, #000000);
-    justify-content: center;
-    align-items: center;
-    margin-top: 40px;
 }
 
 .container {
-    max-width: 1200px;
+    max-width: 600px;
     margin: 0 auto;
     padding: 20px;
     margin-top: 30px;

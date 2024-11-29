@@ -2,24 +2,6 @@ import {baseUrl,headers} from "./api.js"
 
 let selectedItem = null;
 
-async function verificarConexaoAPI() {
-    try {
-        const response = await fetch(`${baseUrl}/PedidoCozinhas?situacaoId=0`, { headers });
-        
-        if (!response.ok) {
-            throw new Error(`Erro de conexão: ${response.status}`);
-        }
-        
-        const data = await response.json();
-    
-        console.log('Conexão com API estabelecida. Dados recebidos:', data);
-        return true;
-    } catch (error) {
-        mostrarErro('Não foi possível conectar ao servidor. Verifique se a API está em funcionamento.');
-        return false;
-    }
-}
-
 async function get0(params) {
     const response0 = await fetch(`${baseUrl}/PedidoCozinhas?situacaoId=1`, {
         method: 'GET',
@@ -50,7 +32,6 @@ async function buscarTodosPedidos() {
         
         // Agora busca as situações regulares (1, 2, 3)
         for (const situacaoId of situacoes) {
-            console.log(`Buscando pedidos - Situação ${situacaoId}`);
             const response = await fetch(`${baseUrl}/PedidoCozinhas?situacaoId=${situacaoId}`, {
                 method: 'GET',
                 headers: headers
@@ -61,13 +42,11 @@ async function buscarTodosPedidos() {
             }
             
             const pedidos = await response.json();
-            console.log(`Pedidos recebidos (Situação ${situacaoId}):`, pedidos);
             atualizarKanban(pedidos, situacaoId);
         }
         
         return true;
     } catch (error) {
-        console.error('Erro ao buscar pedidos:', error);
         mostrarErro('Erro ao carregar pedidos. Verifique a conexão.');
         return false;
     }
@@ -75,9 +54,7 @@ async function buscarTodosPedidos() {
 
 
 async function atualizarStatusPedido(pedidoId, novoStatus,elemento) {
-    console.log(elemento,"elemento",novoStatus,"novo status")
     try {
-        console.log(`Atualizando status do pedido ${pedidoId} para ${novoStatus}`);
         const response = await fetch(`${baseUrl}/PedidoCozinhas/${pedidoId}`, {
             method: 'PUT',
             headers: headers,
@@ -91,22 +68,24 @@ async function atualizarStatusPedido(pedidoId, novoStatus,elemento) {
             throw new Error(`Erro ao atualizar status: ${response.status}`);
         }
         elemento.setAttribute('data-status', getSituacaoNome(novoStatus));
-        console.log(elemento,"elemento atualizado?")
         await buscarTodosPedidos(false);
         mostrarSucesso('Status atualizado com sucesso!');
     } catch (error) {
-        console.error('Erro na atualização:', error);
-        mostrarErro('Erro ao atualizar status do pedido.');
+        // mostrarErro('Erro ao atualizar status do pedido.');
     }
 }
 
 async function excluirPedido(pedidoId) {
     try {
-        console.log(`Excluindo pedido ${pedidoId}`);
-        const response = await fetch(`${baseUrl}/PedidoCozinhas/${pedidoId}`, {
-            method: 'DELETE',
-            headers: headers
+        await fetch(`${baseUrl}/PedidoCozinhas/${pedidoId}`, {
+            method: 'PUT',
+            headers: headers,
+            body: JSON.stringify({
+                
+                novoStatusId: 4
+            })
         });
+   
 
         if (!response.ok) {
             throw new Error(`Erro ao excluir pedido: ${response.status}`);
@@ -115,8 +94,7 @@ async function excluirPedido(pedidoId) {
         await buscarTodosPedidos();
         mostrarSucesso('Pedido excluído com sucesso!');
     } catch (error) {
-        console.error('Erro ao excluir:', error);
-        mostrarErro('Erro ao excluir o pedido.');
+        // mostrarErro('Erro ao excluir o pedido.');
     }
 }
 
@@ -129,9 +107,8 @@ function atualizarKanban(pedidos, situacaoId) {
     };
     const colunaId = colunas[situacaoId];
     const coluna = document.getElementById(colunaId);
-    
+   
     if (!coluna) {
-        console.error(`Coluna não encontrada para situação ${situacaoId}`);
         return;
     }
 
@@ -143,23 +120,21 @@ function atualizarKanban(pedidos, situacaoId) {
     }
 
     pedidos.forEach(pedido => {
-        const pedidoElement = criarElementoPedido(pedido);
+        const pedidoElement = criarElementoPedido(pedido,situacaoId);
         if (pedidoElement) {
             coluna.appendChild(pedidoElement);
         }
     });
 }
 
-function criarElementoPedido(pedido) {
+function criarElementoPedido(pedido,situacaoId) {
     if (!pedido) return null;
-    console.log(pedido,"pedido criar elemento")
     const div = document.createElement('div');
     div.className = 'item';
-    if(!div.getAttribute("data-status")){
+    // if(div.getAttribute("data-status")){
 
-        div.setAttribute('data-status', getSituacaoNome(pedido.situacaoId));
-    }
-    console.log(div.getAttribute('data-status'))
+        div.setAttribute('data-status', getSituacaoNome(situacaoId));
+    // }
     div.setAttribute('data-pedido-id', pedido.id);
 
     div.innerHTML = `
@@ -174,7 +149,6 @@ function criarElementoPedido(pedido) {
 }
 
 function getSituacaoNome(situacaoId) {
-    console.log(situacaoId,"id da situacao")
     const situacoes = {
         0:"preparo",
         1: "preparo",
@@ -185,12 +159,9 @@ function getSituacaoNome(situacaoId) {
 }
 
 function mostrarErro(mensagem) {
-    console.error(mensagem);
-    alert(mensagem);
 }
 
 function mostrarSucesso(mensagem) {
-    console.log(mensagem);
 }
 
 // Eventos
@@ -200,7 +171,6 @@ function handleItemClick(e) {
 
     const status = itemClicado.getAttribute('data-status');
     selectedItem = itemClicado;
-    console.log(selectedItem, status,"click"); 
 
     if (status === 'finalizado') {
         abrirModal('modalExcluir', itemClicado);
@@ -214,7 +184,6 @@ function handleItemClick(e) {
 function abrirModal(modalId, item) {
     const modal = document.getElementById(modalId);
     if (!modal) return;
-
     const contentId = modalId === 'modalIniciar' ? 'modalPedidoContent' : 
                      modalId === 'modalFinalizar' ? 'modalFinalizarContent' : 
                      'modalExcluirContent';
@@ -235,7 +204,6 @@ function fecharModal(modalId) {
 
 // Inicialização
 document.addEventListener('DOMContentLoaded', async () => {
-    console.log('Iniciando aplicação...');
     await get0()
 
     // Configura eventos
@@ -316,5 +284,5 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     
     // Atualização automática
-    setInterval(buscarTodosPedidos, 5000);
+    setInterval(buscarTodosPedidos, 25000);
 });
