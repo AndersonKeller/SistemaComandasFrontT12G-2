@@ -203,12 +203,18 @@ btnAddUsuario.addEventListener("click", () => {
 });
 
 
-const btnmodal = document.querySelector(".close-btn") //btn sair do ADICIONAR Usuario
-btnmodal.addEventListener("click", () => {
-        console.log("click")
-        const modal = document.querySelector(".modal")
-        modal.remove()
-    })
+document.addEventListener('DOMContentLoaded', () => {
+    const btnmodal = document.querySelector(".close-btn");
+    if (btnmodal) {
+        btnmodal.addEventListener("click", () => {
+            console.log("click");
+            const modal = document.querySelector(".modal");
+            if (modal) {
+                modal.remove();
+            }
+        });
+    }
+});
 
 
 function verificaNovoUsuario(){

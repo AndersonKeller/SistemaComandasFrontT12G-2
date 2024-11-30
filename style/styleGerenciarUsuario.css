@@ -125,9 +125,11 @@ body {
 }
 
 .modal-content {
+    background: linear-gradient(45deg, #280b6f, #05000c);
+    border: 1px solid #ffffff17;
+    backdrop-filter: blur(10px);
     border-radius: 10px;
     max-width: 500px;
-    background-image: url(../img/fundo.jpg);
     background-repeat: round;
     width: 420px;
     height: 470px;
