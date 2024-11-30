@@ -18,7 +18,12 @@ window.showErrorModal = showErrorModal;
 console.log(window)
 
 const addBtn = document.querySelector(".add-button")
-addBtn.addEventListener("click",showAddItemModal)
+if(!isAdmin){
+    addBtn.setAttribute("style","display:none;")
+}else{
+
+    addBtn.addEventListener("click",showAddItemModal)
+}
 
 let currentEditItemIndex = null;
 let currentEditItem = null;

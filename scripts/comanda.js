@@ -380,9 +380,9 @@ function adicionarItemParaEdit(item) {
     li.className = 'selected-item';
     li.innerHTML = `
         <span>${item.titulo} - R$ ${item.preco.toFixed(2)}</span>
-        <button class="remove-item" onclick="removerItem('${itemId}', ${item.preco})">
-            <i class="fas fa-trash"></i>
-        </button>
+        <button class="remove-item" onclick="removerItem('9', 11)">
+    <i class="fas fa-times"></i>
+</button>
     `;
     itensSelecionados.appendChild(li);
     atualizarTotalParaEdit(item.preco);
