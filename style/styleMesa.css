@@ -30,6 +30,7 @@ body {
 }
 
 .header {
+    margin-top: 80px;
     background: var(--primary-color);
     padding: 25px 40px;
     border-radius: 15px;

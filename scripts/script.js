@@ -40,7 +40,7 @@ if (loginForm) {
               
                 messageDiv.textContent = 'Login bem-sucedido!';
                 messageDiv.style.color = 'green';
-                
+                localStorage.setItem("usuario",usuarioEncontrado.email)
                
                 setTimeout(() => {
                
@@ -49,7 +49,7 @@ if (loginForm) {
                         window.location.href = '/admin';
                     } else {
                        
-                        window.location.href = '../User/index.html';
+                        window.location.href = '/admin';
                     }
                 }, 1000);
             } else {

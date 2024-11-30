@@ -1,4 +1,9 @@
 import { baseUrl, headers } from "./api.js";
+let isAdmin = false
+const usuarioSalvo = localStorage.getItem("usuario");
+        if(usuarioSalvo === "admin@admin.com"){
+            isAdmin =true
+        }
 
 // Expondo funções globalmente
 window.showAddTableModal = showAddTableModal;
@@ -10,6 +15,14 @@ window.closeModal = closeModal;
 window.saveNewTable = saveNewTable; // Adicionando saveNewTable ao escopo global
 
 let currentEditTableId = null;
+
+const addBtn = document.querySelector(".add-button")
+if(!isAdmin){
+    addBtn.setAttribute("style","display:none;")
+}else{
+
+    addBtn.addEventListener("click",showAddItemModal)
+}
 
 async function initial() {
     try {
@@ -38,6 +51,7 @@ function loadTables(tables) {
                     ${table.situacaoMesa === 0 ? 'Vaga' : 'Ocupada'}
                 </span>
             </div>
+            ${isAdmin?`
             <div class="table-actions">
                 <button class="edit-btn" onclick="editTable(${JSON.stringify(table).replace(/"/g, '&quot;')})">
                     Editar
@@ -45,7 +59,7 @@ function loadTables(tables) {
                 <button class="delete-btn" onclick="deleteTable(${table.id})">
                     Excluir
                 </button>
-            </div>
+            </div>`:""}
         `;
         
         tablesGrid.appendChild(tableElement);
@@ -74,18 +88,21 @@ function createModal(id, content) {
 }
 
 function showAddTableModal() {
-    const modalContent = `
-        <h3>Adicionar Nova Mesa</h3>
-        <input type="number" id="addTableNumber" placeholder="Número da Mesa" min="1" />
-        <select id="addTableStatus">
+    const modalContent = 
+   
+    
+    `<h3>Adicionar Nova Mesa</h3>`
+
+        `<input type="number" id="addTableNumber" placeholder="Número da Mesa" min="1" />`
+        `<select id="addTableStatus">
             <option value="0">Vaga</option>
             <option value="1">Ocupada</option>
-        </select>
-        <div class="modal-buttons">
+        </select>`
+        `<div class="modal-buttons">
             <button class="confirm-button" onclick="saveNewTable()">Adicionar</button>
             <button class="cancel-button" onclick="closeModal('addTableModal')">Cancelar</button>
-        </div>
-    `;
+        </div>`
+    ;
     const modal = createModal('addTableModal', modalContent);
     modal.style.display = 'block';
 }
@@ -125,6 +142,7 @@ async function saveNewTable() {
         alert('Erro ao adicionar mesa.');
     }
 }
+
 
 function editTable(table) {
     currentEditTableId = table.id;
