@@ -59,6 +59,7 @@ body {
     cursor: pointer;
     transition: all 0.3s ease;
     font-weight: bold;
+    top: 20px;
 }
 
 .addUsuario:hover {
@@ -69,7 +70,9 @@ body {
 .container {
     width: 95%;
     max-width: 1200px;
+    
     margin: 20px auto;
+    margin-top: 125px;
     padding: 20px;
     background: repeating-linear-gradient(27deg, #190747, #1a003f 100px);
     border-radius: 10px;

@@ -21,7 +21,7 @@ if(!isAdmin){
     addBtn.setAttribute("style","display:none;")
 }else{
 
-    addBtn.addEventListener("click",showAddItemModal)
+    addBtn.addEventListener("click",showAddTableModal)
 }
 
 async function initial() {
@@ -88,11 +88,8 @@ function createModal(id, content) {
 }
 
 function showAddTableModal() {
-    const modalContent = 
-   
-    
+    const modalContent =   
     `<h3>Adicionar Nova Mesa</h3>`
-
         `<input type="number" id="addTableNumber" placeholder="Número da Mesa" min="1" />`
         `<select id="addTableStatus">
             <option value="0">Vaga</option>
