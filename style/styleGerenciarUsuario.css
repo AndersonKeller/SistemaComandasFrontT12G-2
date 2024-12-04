@@ -61,8 +61,10 @@ body {
 }
 
 .addUsuario:hover {
-    background-color: var(--secondary-color);
-    transform: scale(1.05);
+    
+        transform: translateY(-1px);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    
 }
 
 .container {
@@ -139,14 +141,19 @@ body {
 .modal-content-cadastro {
     border-radius: 10px;
     max-width: 500px;
+    position: absolute;
 }
 
 .close-btn {
-    font-size: 20px;
-    position: absolute;
-    top: 10px;
-    right: 10px;
+    top: 3px;
+    right: 12px;
+    font-size: 24px;
+    color: var(--close-color);
     cursor: pointer;
+    transition: color 0.3s ease;
+    position: absolute;
+    z-index: 1;
+
 }
 
 @keyframes fadeIn {
@@ -190,19 +197,21 @@ body {
 }
 
 .btnExcluirUsuario {
-    background-color: var(--close-color);
-    color: var(--text-color);
-    border: none;
     padding: 10px 20px;
-    border-radius: 5px;
+    border: none;
+    border-radius: 8px;
     cursor: pointer;
-    transition: all 0.3s ease;
-    font-weight: bold;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    background-color: #e53935;
+    color: white;
 }
 
 .btnExcluirUsuario:hover {
-    background-color: #ce0000;
-    transform: scale(1.05);
+    background-color: #d32f2f;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
 }
 
 .users-grid::-webkit-scrollbar {
@@ -347,6 +356,7 @@ body {
 }
 
 .modal-content .close-btn:hover {
+    
     color: #ff504a;
 }
 .background-container {
@@ -397,11 +407,37 @@ input {
     outline: none;
 }
 button {
-    background-color: #ffffff;
+    padding: 10px 20px;
     border: none;
-    color: #000000;
-    padding: 8px 24px;
-    font-size: 16px;
-    border-radius: 5px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    background-color: #43a047;
+    color: white;
+}
+button:hover
+{
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+.senha-container {
+    position: relative;
+}
+
+.toggle-senha {
+    position: absolute;
+    right: -15px;
+    top: 3px;
+    background: transparent;
+    border: none;
     cursor: pointer;
 }
+
+.toggle-senha svg {
+    width: 24px;
+    height: 24px;
+}
+
