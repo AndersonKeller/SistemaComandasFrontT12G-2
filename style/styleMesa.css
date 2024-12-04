@@ -16,7 +16,7 @@
 }
 
 body {
-    background-color: var(--light-bg);
+    background: linear-gradient(to right top, #3d0072, #27003d, #080014, #000000);
     padding: 20px;
     min-height: 100vh;
 }
@@ -28,7 +28,7 @@ body {
 
 .header {
     margin-top: 80px;
-    background: var(--primary-color);
+    background: repeating-linear-gradient(315deg, #3a006b, #140024 250px);
     padding: 25px 40px;
     border-radius: 15px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -196,19 +196,18 @@ body {
     font-size: 1.5em;
 }
 
-.close {
-    position: absolute;
-    right: 20px;
-    top: 20px;
-    font-size: 28px;
-    font-weight: bold;
-    cursor: pointer;
+.close-button {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
     color: #666;
-    transition: color 0.3s ease;
+    cursor: pointer;
+    padding: 5px;
+    transition: color 0.2s ease;
 }
 
-.close:hover {
-    color: var(--dark-text);
+.close-button:hover {
+    color: #333;
 }
 
 .modal input, .modal select {
@@ -312,4 +311,17 @@ body {
 
 .table-card.free::before {
     background: var(--free-bg);
+}
+button{
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+button:hover{
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
 }
