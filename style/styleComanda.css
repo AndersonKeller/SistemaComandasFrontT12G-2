@@ -11,52 +11,67 @@
 }
 
 * {
-    margin: 0;
-    padding: 0;
     box-sizing: border-box;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    scrollbar-width: thin;
+    scrollbar-color: #252525 #00000000;
 }
 
 body {
     background: linear-gradient(to right top, #000000, #0e001a, #27003d, #080014, #000000);
-    line-height: 1.6;
+    line-height: 1.52;
     padding: 20px;
     background-repeat: no-repeat;
     background-attachment: fixed;
 }
 
-span {
+.information {
     margin-top: 90px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 30px;
     padding: 20px;
-    background-color: var(--card-background);
+    background: linear-gradient(#1e0149, #8a43e5e3, #5600cbe3 200px);
     border-radius: var(--border-radius);
     box-shadow: var(--shadow);
 }
+span {
+    margin-top: 90px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding: 13px;
+    background: linear-gradient(#fcfaff, #e2dee7e3, #e1caffe3 100px);
+    border-radius: var(--border-radius);
+}
 
 h1 {
-    color: var(--primary-color);
+    color: #ffffff;
     font-size: 24px;
 }
 
-.add-button {
-    background-color: var(--success-color);
-    color: white;
-    border: none;
+button:hover{
+    transform: translateY(-1px);
+}
+
+button {
     padding: 10px 20px;
-    border-radius: var(--border-radius);
+    border: none;
+    border-radius: 8px;
     cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    transition: background-color 0.3s;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.add-button {
+    background-color: #43a047;
+    color: white;
 }
 
 .add-button:hover {
-    background-color: #27ae60;
+    background-color: #388e3c;
 }
 
 #Comandas-list {
@@ -67,7 +82,7 @@ h1 {
 }
 
 .comanda-card {
-    background-color: var(--card-background);
+    background: linear-gradient(214deg, #8539eb, #ffffff 312px);
     border-radius: var(--border-radius);
     padding: 20px;
     box-shadow: var(--shadow);
@@ -79,7 +94,7 @@ h1 {
     align-items: center;
     margin-bottom: 15px;
     padding-bottom: 10px;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid var(--primary-color);
 }
 
 .comanda-header h3 {
@@ -94,7 +109,7 @@ h1 {
 
 .items-list div {
     margin: 5px 0;
-    color: #666;
+    color: #5600cb;
 }
 
 .total {
@@ -110,14 +125,9 @@ h1 {
 }
 
 .edit-btn, .delete-btn {
-    padding: 8px 15px;
-    border: none;
     border-radius: var(--border-radius);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    transition: background-color 0.3s;
+    font-size: 0.95rem;
+    font-weight: 500;
 }
 
 .edit-btn {
@@ -164,10 +174,15 @@ h1 {
 .close {
     position: absolute;
     right: 20px;
-    top: -87px;
-    font-size: 24px;
-    cursor: pointer;
+    font-size: 30px;
     color: #666;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+}
+.close:hover{
+    color: #333;
 }
 
 .form-group {
@@ -275,11 +290,30 @@ h1 {
 }
 
 .notification.success {
-    background-color: var(--success-color);
+    background-color: #388e3c;
 }
 
 .notification.error {
-    background-color: var(--danger-color);
+    background-color: #c0392b;
+}
+
+::-webkit-scrollbar {
+    width: 12px;
+}
+
+::-webkit-scrollbar-track {
+    background: linear-gradient(to right top, #0e001a, #27003d, #1e0149);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(to bottom, #8a43e5e3, #5600cbe3);
+    border-radius: 10px;
+    border: 2px solid rgba(30, 1, 73, 0.5);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(to bottom, #9b5ae6e3, #6a00dbe3);
 }
 
 @keyframes slideIn {

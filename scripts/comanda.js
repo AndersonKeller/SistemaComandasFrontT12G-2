@@ -89,7 +89,7 @@ function createModal(id, title, content) {
 
     modal.innerHTML = `
         <div class="modal-content">
-            <span class="close">&times;</span>
+            <button class="close">&times;</button>
             <h2>${title}</h2>
             ${content}
         </div>
@@ -177,7 +177,7 @@ function adicionarItem(item) {
         li.innerHTML = `
             <span>${item.titulo} - R$ ${item.preco.toFixed(2)}</span>
             <button class="remove-item" onclick="removerItem('${itemId}', ${item.preco})">
-                <i class="fas fa-trash"></i>
+                <i class="fas fa-trash">X</i>
             </button>
         `;
         itensSelecionados.appendChild(li);
