@@ -67,12 +67,13 @@ function loadTables(tables) {
 }
 
 function createModal(id, content) {
+    console.log("criou o modal")
     const modal = document.createElement('div');
     modal.id = id;
     modal.className = 'modal';
     modal.innerHTML = `
         <div class="modal-content">
-            <span class="close" onclick="closeModal('${id}')">&times;</span>
+            <button class="close" onclick="closeModal('${id}')">&times;</button>
             ${content}
         </div>
     `;
@@ -88,32 +89,30 @@ function createModal(id, content) {
 }
 
 function showAddTableModal() {
-    const modalContent =   
-    `<h3>Adicionar Nova Mesa</h3>`
-        `<input type="number" id="addTableNumber" placeholder="Número da Mesa" min="1" />`
-        `<select id="addTableStatus">
-            <option value="0">Vaga</option>
-            <option value="1">Ocupada</option>
-        </select>`
-        `<div class="modal-buttons">
-            <button class="confirm-button" onclick="saveNewTable()">Adicionar</button>
-            <button class="cancel-button" onclick="closeModal('addTableModal')">Cancelar</button>
-        </div>`
-    ;
+    const modalContent = 
+    `<h3>Adicionar Nova Mesa</h3> 
+    <input  id="addTableNumber" placeholder="Numero da mesa">
+    <select id="addTableStatus">
+        <option value="0">Vaga</option>
+        <option value="1">Ocupada</option>
+    </select>
+    <div class="modal-buttons">
+        <button class="confirm-button" onclick="saveNewTable()">Adicionar</button>
+        <button class="cancel-button" onclick="closeModal('addTableModal')">Cancelar</button>
+    </div>`;
     const modal = createModal('addTableModal', modalContent);
     modal.style.display = 'block';
+   
 }
 
 async function saveNewTable() {
     const tableNumber = document.getElementById('addTableNumber').value;
     const tableStatus = document.getElementById('addTableStatus').value;
-
-    if (!tableNumber) {
-        alert('Por favor, insira um número de mesa válido.');
-        return;
-    }
+    console.log(document.getElementById('addTableNumber'),"input")
+ console.log(tableNumber, "numeromesa")
 
     const newTable = {
+        
         numeroMesa: parseInt(tableNumber),
         situacaoMesa: parseInt(tableStatus)
     };
