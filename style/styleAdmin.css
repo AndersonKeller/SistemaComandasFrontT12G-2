@@ -1,10 +1,9 @@
-*{
+* {
     box-sizing: border-box;
 }
 
-body
-{
-    height: 100vh;
+body {
+    min-height: 100vh;
     background-position: center;
     background-repeat: no-repeat;
     display: flex;
@@ -12,23 +11,24 @@ body
     justify-content: center;
     flex-direction: column;
     background-image: linear-gradient(to right top, #000000, #080014, #27003d, #0e001a, #000000);
-
+    margin: 0;
+    padding: 20px;
+    overflow-x: hidden;
 }
 
-div
-{
+div {
     background-color: transparent;
     border: 2px solid white;
     border-radius: 10px;
-    height: 28vh;
+    max-width: 100%;
     width: 150vh;
     display: flex;
     justify-content: center;
     flex-direction: row;
     align-items: center;
-    
+    flex-wrap: wrap;
+    padding: 10px;
 }
-
 
 .buttoncardapio,
 .buttoncomanda,
@@ -41,11 +41,12 @@ div
     border-radius: 10px;
     border-style: solid;
     border-color: #ffffff;
-    font-family: 'Rubik';
+    font-family: 'Rubik', sans-serif;
     font-size: 25px;
     color: white;
     box-shadow: 0px 0px 32px 0 rgba(31, 38, 135, 0.37);
     transition: all 0.3s ease-in-out;
+    white-space: nowrap;
 }
 
 button:hover {
@@ -53,4 +54,48 @@ button:hover {
     transition: all 0.12s ease-in-out;
     cursor: pointer;
     box-shadow: 0px 0px 32px 0 rgba(31, 38, 135, 0.37);
+}
+
+/* Responsive Adjustments */
+@media screen and (max-width: 1200px) {
+    div {
+        width: 100%;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .buttoncardapio,
+    .buttoncomanda,
+    .buttonpedidocozinha,
+    .buttonusuario,
+    .buttonmesa {
+        margin: 10px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    div {
+        flex-direction: column;
+        height: auto;
+    }
+
+    .buttoncardapio,
+    .buttoncomanda,
+    .buttonpedidocozinha,
+    .buttonusuario,
+    .buttonmesa {
+        width: 80%;
+        margin: 10px 0;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .buttoncardapio,
+    .buttoncomanda,
+    .buttonpedidocozinha,
+    .buttonusuario,
+    .buttonmesa {
+        font-size: 20px;
+        padding: 20px;
+    }
 }
