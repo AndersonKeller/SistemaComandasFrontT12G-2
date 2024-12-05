@@ -284,5 +284,5 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     
     // Atualização automática
-    setInterval(buscarTodosPedidos, 25000);
+    setInterval(buscarTodosPedidos, 2000);
 });

@@ -140,19 +140,37 @@ body {
 .edit-btn {
     background-color: var(--secondary-color);
     color: var(--light-text);
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
 }
 
 .edit-btn:hover {
     background-color: #2980b9;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
 }
 
 .delete-btn {
     background-color: var(--danger-color);
     color: var(--light-text);
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
 }
 
 .delete-btn:hover {
     background-color: #c0392b;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
 }
 
 .modal {
@@ -196,7 +214,7 @@ body {
     font-size: 1.5em;
 }
 
-.close-button {
+.close {
     background: none;
     border: none;
     font-size: 1.5rem;
@@ -206,7 +224,7 @@ body {
     transition: color 0.2s ease;
 }
 
-.close-button:hover {
+.close:hover {
     color: #333;
 }
 
@@ -237,27 +255,45 @@ body {
     border: none;
     border-radius: 8px;
     cursor: pointer;
-    font-size: 1em;
+    font-size: 0.95rem;
     font-weight: 500;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
 }
 
 .confirm-button {
     background-color: var(--success-color);
     color: var(--light-text);
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
 }
 
 .confirm-button:hover {
     background-color: #27ae60;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
 }
 
 .cancel-button {
     background-color: var(--danger-color);
     color: var(--light-text);
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
 }
 
 .cancel-button:hover {
     background-color: #c0392b;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
 }
 
 /* Responsividade */
@@ -302,7 +338,7 @@ body {
     left: 0;
     width: 100%;
     height: 5px;
-    background: var(--secondary-color);
+    background: #5800ff;
 }
 
 .table-card.occupied::before {
@@ -311,17 +347,4 @@ body {
 
 .table-card.free::before {
     background: var(--free-bg);
-}
-button{
-    padding: 10px 20px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 0.95rem;
-    font-weight: 500;
-    transition: all 0.2s ease;
-}
-button:hover{
-    transform: translateY(-1px);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
 }
