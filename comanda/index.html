@@ -1,32 +1,47 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/style/styleComanda.css">
+    <link rel="stylesheet" href="../style/styleComanda.css">
+    <link rel="stylesheet" href="../style/global.css">
     <title>Gerenciamento de Comandas</title>
 </head>
+    <header>
+        <a href="/admin">
+            <img src="../img/logoHeader.png" height="90">
+        </a>
+    </header>
 <body>
-
-
-    <h1>Gerenciador de Comandas</h1>
+    <span class="information">
+        <h1>Sistema de Comandas</h1>
+        <button class="add-button">
+            <i class="fas fa-plus"></i>
+            Nova Comanda
+        </button>
+    </span>
+<main>
     <div id="Comandas-list"></div>
-    
-
-    <button class="add-button">Adicionar Comanda</button>
-    <button class="clear-all-button" onclick="showClearAllModal()">Limpar Todas as Comandas</button>
-
-    <div id="comandas-list"></div>
-
-    <!-- Modal de Adicionar Comanda -->
-    <div id="addComandaModal" class="modal" style="display: none;"></div>
-
-    <!-- Modal de Editar Comanda -->
-    <div id="editModal" class="modal" style="display: none;"></div>
-
-    <!-- Modal de Confirmar Exclusão -->
-    <div id="clearAllModal" class="modal" style="display: none;"></div>
-
+</main>
+<template id="comanda-template">
+    <div class="comanda-card">
+        <div class="comanda-header">
+            <h3></h3>
+        </div>
+        <div class="items-list"></div>
+        <div class="total"></div>
+        <div class="button-group">
+            <button class="edit-btn">
+                <i class="fas fa-edit"></i>
+                Editar
+            </button>
+            <button class="delete-btn">
+                <i class="fas fa-times"></i>
+                Excluir
+            </button>
+        </div>
+    </div>
+</template>
     <script type="module" src="../scripts/comanda.js"></script>
 </body>
 </html>

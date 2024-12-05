@@ -1,379 +1,458 @@
 import { baseUrl, headers } from "./api.js";
 
-// Expondo funções globalmente para que possam ser chamadas em elementos HTML
-window.removeComanda = removeComanda;
-window.editComanda = editComanda;
-window.saveEdit = saveEdit;
-window.showClearAllModal = showClearAllModal;
-window.clearAll = clearAll;
-window.closeModal = closeModal;
-window.adicionarItem = adicionarItem;
-
-// Seleciona o botão de adicionar comanda e adiciona um evento de clique
-const addBtn = document.querySelector(".add-button");
-addBtn.addEventListener("click", showAddComandaModal);
-
-// Variáveis para armazenar o estado da edição da comanda
+// Estado global
 let currentEditComandaId = null;
-let currentEditComanda = null;
+let mesasDisponiveis = [];
+let cardapioItems = [];
 
-// Função para inicializar a aplicação, carregando as comandas
+// Inicialização
 async function initial() {
     try {
-        const res = await fetch(`${baseUrl}/Comandas`, { headers: headers });
-        
-        if (!res.ok) throw new Error("Erro ao carregar Comandas.");
-        const resJson = await res.json();
-        console.log(resJson)
-        loadComandas(resJson);
-    }   catch (error) {
+        const [comandasRes, mesasRes, cardapioRes] = await Promise.all([
+            fetch(`${baseUrl}/Comandas`, { headers }),
+            fetch(`${baseUrl}/Mesas`, { headers }),
+            fetch(`${baseUrl}/CardapioItems`, { headers })
+        ]);
+
+        if (!comandasRes.ok || !mesasRes.ok || !cardapioRes.ok) 
+            throw new Error("Erro ao carregar os dados.");
+
+        const comandas = await comandasRes.json();
+        mesasDisponiveis = await mesasRes.json();
+        cardapioItems = await cardapioRes.json();
+
+        loadComandas(comandas);
+    } catch (error) {
         console.error("Erro na inicialização:", error);
-        //alert("Erro ao inicializar a aplicação.");
+        showNotification("Erro ao inicializar a aplicação.", "error");
     }
 }
 
-// Função para carregar e exibir as comandas na interface
-function loadComandas(Comandas) {
-    console.log(Comandas)
-    const ComandasList = document.getElementById('Comandas-list');
-    if (!ComandasList) {
-        console.error("Elemento 'Comandas-list' não encontrado.");
-        return;
-    }
+// Funções de UI
+function loadComandas(comandas) {
+    const comandasList = document.getElementById('Comandas-list');
+    const template = document.getElementById('comanda-template');
 
-    // Limpa a lista de comandas existente
-    ComandasList.innerHTML = '';
-    Comandas.forEach(comanda => {
-        const comandaElement = document.createElement('div');
-        comandaElement.className = 'comanda';
-        comandaElement.innerHTML = `
-            <span>Mesa ${comanda.numeroMesa} - ${comanda.nomeCliente}</span>
-            <p>Total: R$ ${calcularTotalComanda(comanda).toFixed(2)}</p>
-            <div>
-                <button onclick="window.editComanda(${JSON.stringify(comanda).replace(/"/g, '&quot;')})">✏️</button>
-                <button onclick="window.removeComanda('${comanda.id}')">❌</button>
-            </div>
-        `;
-        ComandasList.appendChild(comandaElement);
+    comandasList.innerHTML = '';
+    
+    comandas.forEach(comanda => {
+        const clone = template.content.cloneNode(true);
+        
+        clone.querySelector('h3').textContent = `Mesa ${comanda.numeroMesa} - ${comanda.nomeCliente}`;
+        clone.querySelector('.total').textContent = `Total: R$ ${calcularTotalComanda(comanda).toFixed(2)}`;
+        
+        const itemsList = clone.querySelector('.items-list');
+        
+        // Agrupa os itens por título e conta as ocorrências
+        const itensAgrupados = comanda.comandaItens?.reduce((acc, item) => {
+            if (!acc[item.titulo]) {
+                acc[item.titulo] = {
+                    ...item,
+                    quantidade: 1,
+                    totalPreco: item.preco
+                };
+            } else {
+                acc[item.titulo].quantidade += 1;
+                acc[item.titulo].totalPreco += item.preco;
+            }
+            return acc;
+        }, {});
+
+        // Cria os elementos para cada item agrupado
+        Object.values(itensAgrupados || {}).forEach(item => {
+            const itemElement = document.createElement('div');
+            itemElement.className = 'comanda-item';
+            itemElement.textContent = `${item.quantidade}x ${item.titulo} - R$ ${item.totalPreco.toFixed(2)}`;
+            itemsList.appendChild(itemElement);
+        });
+
+        const editBtn = clone.querySelector('.edit-btn');
+        const deleteBtn = clone.querySelector('.delete-btn');
+        
+        editBtn.onclick = () => editComanda(comanda);
+        deleteBtn.onclick = () => showDeleteConfirmModal(comanda.id);
+
+        comandasList.appendChild(clone);
     });
 }
 
-// Função para calcular o total de uma comanda
 function calcularTotalComanda(comanda) {
-  console.log(comanda,"comanda que chga no calcular")
-    comanda.comandaItens.map((item,index,array)=>{
-        const itens = array.filter((i)=>i.titulo === item.titulo)
-        item.quantidade = itens.length
-    })
-    if(comanda.comandaItens){
-
-        const res= comanda.comandaItens.reduce((total, item) => total + item.preco * item.quantidade, 0);
-        console.log(res,"res do reduce")
-        return res
-    }
-    return 0
+    return comanda.comandaItens?.reduce((total, item) => 
+        total + item.preco, 0) || 0;
 }
 
-// Função para criar um modal
-function createModal(id, content) {
+// Funções de Modal
+function createModal(id, title, content) {
     const modal = document.createElement('div');
-    modal.id = id;
     modal.className = 'modal';
+    modal.id = id;
+
     modal.innerHTML = `
         <div class="modal-content">
-            <span class="close">&times;</span>
+            <button class="close">&times;</button>
+            <h2>${title}</h2>
             ${content}
         </div>
     `;
-    document.body.appendChild(modal);
 
-    // Adiciona funcionalidade para fechar o modal
+    document.body.appendChild(modal);
+    modal.style.display = 'block';
+
     const closeBtn = modal.querySelector('.close');
     closeBtn.onclick = () => closeModal(id);
 
     window.onclick = (event) => {
-        if (event.target === modal) {
-            closeModal(id);
-        }
+        if (event.target === modal) closeModal(id);
     };
 
     return modal;
 }
 
-// Função para mostrar o modal de adicionar comanda
 function showAddComandaModal() {
+    const mesasOptions = mesasDisponiveis
+        .map(mesa => `<option value="${mesa.numeroMesa}">Mesa ${mesa.numeroMesa}</option>`)
+        .join('');
+
     const modalContent = `
-        <h3>Adicionar Comanda</h3>
-        <input type="text" id="addComandaMesa" placeholder="Número da Mesa" />
-        <input type="text" id="addComandaCliente" placeholder="Nome do Cliente" />
-        <h4>Itens do Cardápio</h4>
-        <div id="itensCardapio"></div>
-        <h4>Itens Selecionados</h4>
-        <ul id="itensSelecionados"></ul>
-        <p>Total: R$ <span id="totalComanda">0.00</span></p>
-        <button id="addComanda">Adicionar Comanda</button>
+        <div class="form-group">
+            <label for="mesa">Mesa:</label>
+            <select id="addComandaMesa" required>${mesasOptions}</select>
+        </div>
+
+        <div class="form-group">
+            <label for="cliente">Nome do Cliente:</label>
+            <input type="text" id="addComandaCliente" required placeholder="Nome do Cliente" />
+        </div>
+
+        <div class="items-container">
+            <h3>Itens do Cardápio</h3>
+            <div id="itensCardapio" class="items-grid"></div>
+        </div>
+
+        <div class="items-container">
+            <h3>Itens Selecionados</h3>
+            <ul id="itensSelecionados" class="selected-items"></ul>
+        </div>
+
+        <div class="total-section">
+            Total: R$ <span id="totalComanda">0.00</span>
+        </div>
+
+        <button id="addComanda" class="add-button">
+            <i class="fas fa-check"></i> Adicionar Comanda
+        </button>
     `;
-    const modal = createModal('addComandaModal', modalContent);
-    modal.style.display = 'block';
-    carregarItensCardapio(); // Carrega os itens do cardápio
-    const addComandaBtn = document.querySelector("#addComanda");
-    addComandaBtn.addEventListener("click", addComanda); // Adiciona evento para adicionar comanda
+
+    createModal('addComandaModal', 'Nova Comanda', modalContent);
+    loadCardapioItems();
+    document.getElementById('addComanda').onclick = addComanda;
 }
 
-// Função para carregar os itens do cardápio
-async function carregarItensCardapio() {
-    try {
-        const res = await fetch(`${baseUrl}/CardapioItems`, { headers });
-        if (!res.ok) throw new Error("Erro ao carregar itens do cardápio.");
-        const itens = await res.json();
-        const itensCardapio = document.getElementById('itensCardapio');
-        if (!itensCardapio) return;
+function loadCardapioItems() {
+    const itensCardapio = document.getElementById('itensCardapio');
+    itensCardapio.innerHTML = '';
 
-        itensCardapio.innerHTML = '';
-        itens.forEach(item => {
-            const btn = document.createElement('button');
-            btn.id = item.id
-            btn.textContent = `${item.titulo} - R$ ${item.preco.toFixed(2)}`;
-            btn.onclick = () => adicionarItem(item); // Adiciona o item ao clicar
-            itensCardapio.appendChild(btn);
-        });
-    } catch (error) {
-        console.error('Erro ao carregar itens do cardápio:', error);
+    cardapioItems.forEach(item => {
+        const btn = document.createElement('div');
+        btn.className = 'item-button';
+        btn.innerHTML = `
+            ${item.titulo}<br>
+            R$ ${item.preco.toFixed(2)}
+        `;
+        btn.onclick = () => adicionarItem(item);
+        itensCardapio.appendChild(btn);
+    });
+}
+
+function adicionarItem(item) {
+    const itensSelecionados = document.getElementById('itensSelecionados');
+    const itemId = `item-${item.id}`;
+    let existingItem = document.getElementById(itemId);
+  
+    if (!existingItem) {
+        const li = document.createElement('li');
+        li.id = itemId;
+        
+        li.className = 'selected-item';
+        li.innerHTML = `
+            <span>${item.titulo} - R$ ${item.preco.toFixed(2)}</span>
+            <button class="remove-item" onclick="removerItem('${itemId}', ${item.preco})">
+                <i class="fas fa-trash">X</i>
+            </button>
+        `;
+        itensSelecionados.appendChild(li);
+        atualizarTotal(item.preco);
     }
 }
 
-// Função para adicionar um item selecionado à comanda
-function adicionarItem(item) {
-    console.log(item,"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
-    const itensSelecionados = document.getElementById('itensSelecionados');
-    if (!itensSelecionados) return;
-
-    const li = document.createElement('li');
-    li.id = item.id
-    li.textContent = `${item.titulo} - R$ ${item.preco.toFixed(2)}`;
-    itensSelecionados.appendChild(li);
-    atualizarTotal(item.preco); // Atualiza o total da comanda
+function removerItem(itemId, preco) {
+    console.log(itemId,"itemId")
+    const id = itemId.includes("-")?itemId.split("-")[1]:itemId
+    console.log(id,"id")
+    const item =Array.from( document.querySelectorAll(`#item-${id}`))
+    const findNone = item.find((li)=>!li.getAttribute("style"))
+    console.log(findNone,"item com o id")
+    findNone.setAttribute("style","display:none;");
+    atualizarTotal(-preco);
 }
 
-// Função para atualizar o total da comanda
-function atualizarTotal(preco) {
+function atualizarTotal(valor) {
     const totalSpan = document.getElementById('totalComanda');
-    if (!totalSpan) return;
-
-    const totalAtual = parseFloat(totalSpan.textContent);
-    totalSpan.textContent = (totalAtual + preco).toFixed(2); // Adiciona o preço do item ao total
+    const totalSpanEdit = document.getElementById('editTotalComanda');
+    
+    const totalAtual = totalSpan ? parseFloat(totalSpan.textContent):parseFloat(totalSpanEdit.textContent);
+    totalSpan? totalSpan.textContent = (totalAtual + valor).toFixed(2):totalSpanEdit.textContent = (totalAtual + valor).toFixed(2);
 }
 
-// Função para adicionar uma nova comanda
 async function addComanda() {
-    const mesaInput = document.getElementById('addComandaMesa');
-    const clienteInput = document.getElementById('addComandaCliente');
+    const mesaInput = document.getElementById('addComandaMesa').value;
+    const clienteInput = document.getElementById('addComandaCliente').value;
     const itensSelecionados = document.getElementById('itensSelecionados').children;
-    const numeroMesa = mesaInput.value.trim();
-    const nomeCliente = clienteInput.value.trim();
-    console.log(itensSelecionados,"itens selecionados")
+
+    if (!mesaInput || !clienteInput || itensSelecionados.length === 0) {
+        showNotification('Preencha todos os campos e adicione pelo menos um item.', 'error');
+        return;
+    }
+
     const itens = Array.from(itensSelecionados).map(li => {
-        const [titulo, preco] = li.textContent.split(' - R$ '); // Extrai título e preço
-        console.log(preco,"li aki")
-        return { titulo, preco: parseFloat(preco), quantidade: 1,id:li.id }; // Cria objeto de item
+        const id = li.id.replace('item-', '');
+        const item = cardapioItems.find(i => i.id === parseInt(id));
+        return {
+            idProduto: parseInt(id),
+            titulo: item.titulo ?? "",
+            preco: item.preco
+        };
     });
 
-    // Verifica se todos os campos estão preenchidos
-    if (numeroMesa && nomeCliente && itens.length > 0) {
-        const novaComanda = { numeroMesa, nomeCliente, itens };
-        await addComandaApi(novaComanda); // Chama a API para adicionar a comanda
-    } else {
-        alert('Por favor, preencha todos os campos e adicione pelo menos um item.');
-    }
-}
+    const novaComanda = {
+        numeroMesa: parseInt(mesaInput),
+        nomeCliente: clienteInput.trim(),
+        cardapioItems: itens.map(item => item.idProduto)
+    };
 
-// Função para enviar a nova comanda para a API
-async function addComandaApi(comanda) {
-    console.log(comanda,"comanda na riacao")
-    comanda.cardapioItems = comanda.itens.map((item)=>Number(item.id))
     try {
         const res = await fetch(`${baseUrl}/Comandas`, {
-            method: "POST",
-            headers: {
-                ...headers,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(comanda)
+            method: 'POST',
+            headers: { headers, 'Content-Type': 'application/json' },
+            body: JSON.stringify(novaComanda)
         });
-        if (res.ok) {
-            closeModal('addComandaModal'); // Fecha o modal após sucesso
-            initial(); // Atualiza a lista de comandas
-        } else {
-            alert('Erro ao adicionar a comanda.');
-        }
+
+        if (!res.ok) throw new Error('Erro ao adicionar comanda');
+
+        closeModal('addComandaModal');
+        showNotification('Comanda adicionada com sucesso!', 'success');
+        initial();
     } catch (error) {
         console.error('Erro ao adicionar comanda:', error);
-        alert('Erro ao adicionar a comanda.');
+        showNotification('Erro ao adicionar comanda.', 'error');
     }
 }
 
-// Função para remover uma comanda
-async function removeComanda(id) {
+function showDeleteConfirmModal(id) {
+    const modalContent = `
+        <p>Tem certeza que deseja excluir esta comanda?</p>
+        <div class="modal-buttons">
+            <button onclick="deleteComanda('${id}')" class="danger-button">
+                <i class="fas fa-trash"></i> Confirmar
+            </button>
+            <button onclick="closeModal('deleteConfirmModal')" class="secondary-button">
+                <i class="fas fa-times"></i> Cancelar
+            </button>
+        </div>
+    `;
+
+    createModal('deleteConfirmModal', 'Confirmar Exclusão', modalContent);
+}
+
+async function deleteComanda(id) {
     try {
         const res = await fetch(`${baseUrl}/Comandas/${id}`, {
-            method: "DELETE",
+            method: 'DELETE',
             headers
         });
 
-        if (res.ok) {
-            initial(); // Atualiza a lista de comandas após remoção
-        } else {
-            alert('Erro ao remover a comanda.');
-        }
+        if (!res.ok) throw new Error('Erro ao excluir comanda');
+
+        closeModal('deleteConfirmModal');
+        showNotification('Comanda excluída com sucesso!', 'success');
+        initial();
     } catch (error) {
-        console.error('Erro ao remover comanda:', error);
-        alert('Erro ao remover a comanda.');
+        console.error('Erro ao excluir comanda:', error);
+        showNotification('Erro ao excluir comanda.', 'error');
     }
 }
 
-// Função para abrir o modal de edição de uma comanda
-function editComanda(comanda) {
-    currentEditComandaId = comanda.id;
-    currentEditComanda = comanda;
-    const modalContent = `
-        <h3>Editar Comanda</h3>
-        <input type="text" id="editComandaMesa" value="${comanda.numeroMesa}" />
-        <input type="text" id="editComandaCliente" value="${comanda.nomeCliente}" />
-        <h4>Itens do Cardápio</h4>
-        <div id="itensCardapio"></div>
-        <h4>Itens Selecionados</h4>
-        <ul id="itensSelecionados"></ul>
-        <p>Total: R$ <span id="totalComanda">0.00</span></p>
-        <button onclick="window.saveEdit()">Salvar</button>
-    `;
-    const modal = createModal('editModal', modalContent);
-    modal.style.display = 'block';
-    carregarItensCardapio(); // Carrega os itens do cardápio
-    console.log(comanda,"comanda")
-    carregarItensSelecionados(comanda.comandaItens); // Carrega os itens selecionados
+function showNotification(message, type) {
+    const notification = document.createElement('div');
+    notification.className = `notification ${type}`;
+    notification.textContent = message;
+
+    document.body.appendChild(notification);
+
+    setTimeout(() => {
+        notification.remove();
+    }, 3000);
 }
 
-// Função para carregar os itens selecionados em uma comanda
-function carregarItensSelecionados(itens) {
-    const itensSelecionados = document.getElementById('itensSelecionados');
-    if (!itensSelecionados) return;
-    console.log("aqui que ta montando errado")
-    itensSelecionados.innerHTML = '';
-    let total = 0;
-    console.log(itens)
-    itens.forEach(item => {
-        const li = document.createElement('li');
-        li.id = item.idProduto
-        console.log(item.id)
-        li.textContent = `${item.titulo} - Quantidade: ${item.quantidade} - R$ ${(item.preco * item.quantidade).toFixed(2)}`;
-        itensSelecionados.appendChild(li);
-        total += item.preco * item.quantidade; // Calcula o total
-    });
-    document.getElementById('totalComanda').textContent = total.toFixed(2); // Atualiza o total no modal
-}
-
-// Função para salvar as edições da comanda
-async function saveEdit() {
-    const mesaInput = document.getElementById('editComandaMesa');
-    const clienteInput = document.getElementById('editComandaCliente');
-    const itensSelecionados = document.getElementById('itensSelecionados').children;
-   
-    const numeroMesa = mesaInput.value.trim();
-    const nomeCliente = clienteInput.value.trim();
-    const itens = Array.from(itensSelecionados).map((li,index,self) => {
-       
-        const [titulo, preco] = li.textContent.split(' - ');
-        const findItem = self.filter((item)=>item.id===li.id)
-        const quantidade = findItem.length
-        
-        return { 
-            titulo, 
-            id:li.id,
-            quantidade: quantidade, // Extrai quantidade
-            preco: parseFloat(preco.split('R$ ')[1]) / parseInt(quantidade) // Calcula o preço unitário
-        };
-    });
-
-    // Verifica se todos os campos estão preenchidos
-    console.log(itens,"itens")
-    if (numeroMesa && nomeCliente && itens.length > 0) {
-        const comandaAtualizada = {
-            id:currentEditComandaId,
-            numeroMesa,
-            nomeCliente,
-            cardapioItems:itens.map((item)=>parseInt(item.id))
-        };
-
-        try {
-            const res = await fetch(`${baseUrl}/Comandas/${currentEditComandaId}`, {
-                method: "PUT",
-                headers: {
-                  headers,
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(comandaAtualizada) // Envia a comanda atualizada
-            });
-
-            if (res.ok) {
-                closeModal('editModal'); // Fecha o modal após sucesso
-                initial(); // Atualiza a lista de comandas
-            } else {
-                alert('Erro ao atualizar a comanda.');
-            }
-        } catch (error) {
-            console.error('Erro ao atualizar comanda:', error);
-            alert('Erro ao atualizar a comanda.');
-        }
-    } else {
-        alert('Por favor, preencha todos os campos e mantenha pelo menos um item.');
-    }
-}
-
-// Função para mostrar o modal de confirmação para remover todas as comandas
-function showClearAllModal() {
-    const modalContent = `
-        <h3>Confirmar Exclusão</h3>
-        <p>Tem certeza que deseja remover todas as Comandas?</p>
-        <div class="modal-buttons">
-            <button class="confirm-button" onclick="window.clearAll()">Confirmar</button>
-            <button class="cancel-button" onclick="window.closeModal('clearAllModal')">Cancelar</button>
-        </div>
-    `;
-    const modal = createModal('clearAllModal', modalContent);
-    modal.style.display = 'block';
-}
-
-// Função para remover todas as comandas
-async function clearAll() {
-    try {
-        const res = await fetch(`${baseUrl}/Comandas`, { headers });
-        if (!res.ok) throw new Error("Erro ao carregar as Comandas.");
-        const Comandas = await res.json();
-
-        // Deleta todas as comandas sequencialmente
-        for (const comanda of Comandas) {
-            await fetch(`${baseUrl}/Comandas/${comanda.id}`, {
-                method: "DELETE",
-                headers
-            });
-        }
-
-        closeModal('clearAllModal'); // Fecha o modal após a exclusão
-        initial(); // Atualiza a lista de comandas
-    } catch (error) {
-        console.error('Erro ao limpar todas as Comandas:', error);
-        alert('Erro ao limpar todas as Comandas.');
-    }
-}
-
-// Função para fechar um modal
 function closeModal(modalId) {
     const modal = document.getElementById(modalId);
     if (modal) {
-        modal.style.display = 'none'; // Esconde o modal
-        document.body.removeChild(modal); // Remove o modal do DOM
+        modal.style.display = 'none';
+        modal.remove();
     }
 }
 
-// Inicializar a aplicação ao carregar a página
-initial();
+function showEditComandaModal(comanda) {
+    const mesasOptions = mesasDisponiveis
+        .map(mesa => `<option value="${mesa.numeroMesa}" ${mesa.numeroMesa === comanda.numeroMesa ? 'selected' : ''}>Mesa ${mesa.numeroMesa}</option>`)
+        .join('');
+
+    const selectedItemsHtml = comanda.comandaItens.map(item => {
+        return `
+            <li id="item-${item.idProduto}" data-id=${item.id} class="selected-item">
+                <span>${item.titulo} - R$ ${item.preco.toFixed(2)}</span>
+                <button class="remove-item" onclick="removerItem('${item.idProduto}', ${item.preco})">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </li>
+        `;
+    }).join('');
+
+    const modalContent = `
+        <div class="form-group">
+            <label for="editMesa">Mesa:</label>
+            <select id="editComandaMesa" required>${mesasOptions}</select>
+        </div>
+
+        <div class="form-group">
+            <label for="editCliente">Nome do Cliente:</label>
+            <input type="text" id="editComandaCliente" value="${comanda.nomeCliente}" required />
+        </div>
+
+        <div class="items-container">
+            <h3>Itens do Cardápio</h3>
+            <div id="itensCardapioEdit" class="items-grid"></div>
+        </div>
+
+        <div class="items-container">
+            <h3>Itens Selecionados</h3>
+            <ul id="editItensSelecionados" class="selected-items">
+                ${selectedItemsHtml}
+            </ul>
+        </div>
+
+        <div class="total-section">
+            Total: R$ <span id="editTotalComanda">${calcularTotalComanda(comanda).toFixed(2)}</span>
+        </div>
+
+        <button id="updateComanda" class="add-button">
+            <i class="fas fa-check"></i> Atualizar Comanda
+        </button>
+    `;
+
+    createModal('editComandaModal', 'Editar Comanda', modalContent);
+    loadCardapioItemsForEdit();
+}
+
+function loadCardapioItemsForEdit() {
+    const itensCardapioEdit = document.getElementById('itensCardapioEdit');
+    itensCardapioEdit.innerHTML = '';
+
+    cardapioItems.forEach(item => {
+        const btn = document.createElement('div');
+        btn.className = 'item-button';
+        btn.innerHTML = `
+            ${item.titulo}<br>
+            R$ ${item.preco.toFixed(2)}
+        `;
+        btn.onclick = () => adicionarItemParaEdit(item);
+        itensCardapioEdit.appendChild(btn);
+    });
+}
+
+function adicionarItemParaEdit(item) {
+    const itensSelecionados = document.getElementById('editItensSelecionados');
+    const itemId = `item-${item.id}`;
+    
+    const li = document.createElement('li');
+    li.id = itemId;
+    li.setAttribute("name", "novoitem");
+    li.className = 'selected-item';
+    li.innerHTML = `
+        <span>${item.titulo} - R$ ${item.preco.toFixed(2)}</span>
+        <button class="remove-item" onclick="removerItem('9', 11)">
+    <i class="fas fa-times"></i>
+</button>
+    `;
+    itensSelecionados.appendChild(li);
+    atualizarTotalParaEdit(item.preco);
+}
+
+function atualizarTotalParaEdit(valor) {
+    const totalSpan = document.getElementById('editTotalComanda');
+    const totalAtual = parseFloat(totalSpan.textContent);
+    totalSpan.textContent = (totalAtual + valor).toFixed(2);
+}
+
+async function editComanda(comanda) {
+    try {
+        showEditComandaModal(comanda);
+
+        const updateBtn = document.getElementById('updateComanda');
+        updateBtn.onclick = async () => {
+            const mesaInput = document.getElementById('editComandaMesa').value;
+            const clienteInput = document.getElementById('editComandaCliente').value;
+            const itensSelecionados = document.getElementById('editItensSelecionados').children;
+
+            if (!mesaInput || !clienteInput || itensSelecionados.length === 0) {
+                showNotification('Preencha todos os campos e adicione pelo menos um item.', 'error');
+                return;
+            }
+
+            const updatedItems = Array.from(itensSelecionados).map(li => {
+                const id = li.id.replace('item-', '');
+                const item = cardapioItems.find(i => i.id === parseInt(id));
+                return {
+                    id: li.getAttribute("style") ? parseInt(li.getAttribute("data-id")) : 0,
+                    incluir: li.getAttribute("name") ? true : false,
+                    cardapioItemId: parseInt(item.id),
+                    excluir: li.getAttribute("style") ? true : false                    
+                };
+            });
+
+            const updatedComanda = {
+                id: comanda.id,
+                numeroMesa: 0,
+                nomeCliente: clienteInput.trim(),
+                comandaItens: updatedItems
+            };
+
+            const res = await fetch(`${baseUrl}/Comandas/${comanda.id}`, {
+                method: 'PUT',
+                headers: { headers, 'Content-Type': 'application/json' },
+                body: JSON.stringify(updatedComanda)
+            });
+
+            if (!res.ok) throw new Error('Erro ao atualizar a comanda');
+
+            closeModal('editComandaModal');
+            showNotification('Comanda atualizada com sucesso!', 'success');
+            initial();
+        };
+    } catch (error) {
+        console.error('Erro ao editar a comanda:', error);
+    }
+}
+
+// Funções Window
+window.removerItem = removerItem;
+window.deleteComanda = deleteComanda;
+window.showDeleteConfirmModal = showDeleteConfirmModal;
+window.closeModal = closeModal;
+window.editComanda = editComanda;
+
+// Inicialização
+document.addEventListener('DOMContentLoaded', () => {
+    initial();
+    document.querySelector('.add-button').addEventListener('click', showAddComandaModal);
+});

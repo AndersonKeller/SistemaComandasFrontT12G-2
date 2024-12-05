@@ -1,40 +1,54 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistema de Pedidos - Cozinha</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../style/stylePedidoCozinha.css">
+    <link rel="stylesheet" href="../style/global.css">
 </head>
+<header>
+    <a href="/admin">
+        <img src="../img/logoHeader.png" height="90">
+    </a>
+</header>
 <body>
     <div class="container">
-        <h1>Sistema de Pedidos</h1>
+        <h1 style="margin-top: 48px;">Sistema de Pedidos</h1>
         
         <div class="kanban">
             <div class="column preparo" id="preparo">
-                <h2>Em Preparo</h2>
-                <div class="item" data-status="preparo">
-                    Pedido #1
-                    <ul>
-                        <li>X-Burger</li>
-                        <li>Batata Frita</li>
-                    </ul>
+                <div class="column-header">
+                    <h2>Pendente</h2>
+                    <span class="pedidos-count" id="preparo-count"></span>
                 </div>
-                <div class="item" data-status="preparo">
-                    Pedido #2
-                    <ul>
-                        <li>Pizza Margherita</li>
-                    </ul>
+                <div class="column-content">
+                    <div class="item">
+                        
+                    </div>
+                    <!-- Os pedidos serão inseridos aqui pelo JavaScript -->
                 </div>
             </div>
-
+            
             <div class="column andamento" id="andamento">
-                <h2>Em Andamento</h2>
+                <div class="column-header">
+                    <h2>Em Andamento</h2>
+                    <span class="pedidos-count" id="andamento-count"></span>
+                </div>
+                <div class="column-content">
+                    <!-- Os pedidos serão inseridos aqui pelo JavaScript -->
+                </div>
             </div>
-
+            
             <div class="column finalizado" id="finalizado">
-                <h2>Finalizado</h2>
+                <div class="column-header">
+                    <h2>Finalizado</h2>
+                    <span class="pedidos-count" id="finalizado-count"></span>
+                </div>
+                <div class="column-content">
+                    <!-- Os pedidos serão inseridos aqui pelo JavaScript -->
+                </div>
             </div>
         </div>
     </div>
@@ -42,14 +56,19 @@
     <!-- Modal para Iniciar Pedido -->
     <div class="modal" id="modalIniciar">
         <div class="modal-content">
-            <h2>Iniciar Preparo</h2>
+            <div class="modal-header">
+                <h2>Iniciar Pedido</h2>
+                <button class="close-button" onclick="fecharModal('modalIniciar')">&times;</button>
+            </div>
             <div class="modal-body">
-                <p>Deseja iniciar o preparo deste pedido?</p>
-                <div id="modalPedidoContent"></div>
+                <p class="modal-message">Deseja encaminhar para em andamento esse pedido?</p>
+                <div class="pedido-details" id="modalPedidoContent">
+                    <!-- Detalhes do pedido serão inseridos aqui -->
+                </div>
             </div>
             <div class="modal-footer">
-                <button class="btn-cancelar" onclick="fecharModal('modalIniciar')">Cancelar</button>
-                <button class="btn-confirmar" id="btnIniciarComanda">Iniciar Comanda</button>
+                <button class="btn btn-cancelar" onclick="fecharModal('modalIniciar')">Cancelar</button>
+                <button class="btn btn-confirmar" id="btnIniciarComanda">Iniciar Pedido</button>
             </div>
         </div>
     </div>
@@ -57,18 +76,43 @@
     <!-- Modal para Finalizar Pedido -->
     <div class="modal" id="modalFinalizar">
         <div class="modal-content">
-            <h2>Finalizar Pedido</h2>
+            <div class="modal-header">
+                <h2>Finalizar Pedido</h2>
+                <button class="close-button" onclick="fecharModal('modalFinalizar')">&times;</button>
+            </div>
             <div class="modal-body">
-                <p>Deseja finalizar este pedido?</p>
-                <div id="modalFinalizarContent"></div>
+                <p class="modal-message">Deseja finalizar este pedido?</p>
+                <div class="pedido-details" id="modalFinalizarContent">
+                    <!-- Detalhes do pedido serão inseridos aqui -->
+                </div>
             </div>
             <div class="modal-footer">
-                <button class="btn-cancelar" onclick="fecharModal('modalFinalizar')">Cancelar</button>
-                <button class="btn-confirmar" id="btnFinalizarComanda">Finalizar Comanda</button>
+                <button class="btn btn-cancelar" onclick="fecharModal('modalFinalizar')">Cancelar</button>
+                <button class="btn btn-confirmar" id="btnFinalizarComanda">Finalizar Pedido</button>
             </div>
         </div>
     </div>
 
-    <script src="../scripts/pedidoCozinha.js"></script>
+    <!-- Modal para Excluir Pedido -->
+    <div class="modal" id="modalExcluir">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Excluir Pedido</h2>
+                <button class="close-button" onclick="fecharModal('modalExcluir')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p class="modal-message">Deseja excluir este pedido?</p>
+                <div class="pedido-details" id="modalExcluirContent">
+                    <!-- Detalhes do pedido serão inseridos aqui -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-cancelar" onclick="fecharModal('modalExcluir')">Cancelar</button>
+                <button class="btn btn-confirmar" id="btnExcluirComanda">Excluir Pedido</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="../scripts/pedidoCozinha.js"></script>
 </body>
 </html>

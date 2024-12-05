@@ -4,21 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin:Tela de Seleção</title>
-    <link rel="stylesheet" href="/style/styleAdmin.css">
+    <link rel="stylesheet" href="../style/styleAdmin.css">
+    <link rel="stylesheet" href="../style/global.css">
 </head>
+<header>
+    <img onclick="navegarPara('../index.html')" src="../img/logoHeader.png" height="90">
+</header>
 <body>
-   <h1>Sair</h1>
-    <header>
-        <img src="/img/logo.png">
-    </header>
-    
     <div>
-        <form>
-            <button class ="buttoncardapio">Cardápio </button>
-            <button class ="buttoncomanda">Comanda</button>
-            <button class ="buttonpedidocozinha">Pedido Cozinha</button>
-            <button class ="buttonusuario">Usuario</button>
+        <form id="navigationForm" onsubmit="return false">
+            
+            <button class="buttoncardapio" onclick="navegarPara('../cardapio/index.html')">Cardápio</button>
+            <button class="buttoncomanda" onclick="navegarPara('../comanda/index.html')">Comanda</button>
+            <button class="buttonpedidocozinha" onclick="navegarPara('../pedidocozinha/index.html')">Pedido Cozinha</button>
+            <button class="buttonusuario" onclick="navegarPara('../gerenciar/index.html')">Usuario</button>
+            <button class="buttonmesa" onclick="navegarPara('../mesa/index.html')">Mesas</button>
+
         </form>
     </div>
+    <script src="../scripts/telaSelecao.js"></script>
 </body>
 </html>

@@ -1,26 +1,27 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin:Tela de Seleção</title>
-    <link rel="stylesheet" href="/style/styleAdminCardapio.css">
+    <title>Cardápio</title>
+    <link rel="stylesheet" href="../style/global.css">
+    <link rel="stylesheet" href="../style/styleAdminCardapio.css">
 </head>
-<body>
-
-    <div class="container">
-        <h2>CARDÁPIO</h2>
-        <div id="items-list"></div>
-        <button class="add-button">+</button>
-        
-    </div>
-
-    <script type="module"  src="../scripts/AdminCardapio.js"></script>
-
-    <a href="../comanda/index.html">
-
-        navegar 
-        
+<header>
+    <a href="/admin">
+        <img src="../img/logoHeader.png" height="90" alt="Logo">
     </a>
+</header>
+
+<div class="container">
+    <h2>CARDÁPIO</h2>
+    <div id="items-list" class="items-container"></div>
+    <div class="button-container">
+        <button class="add-button" title="Adicionar novo item">+</button>
+
+    </div>
+</div>
+
+    <script type="module"  src="../scripts/cardapio.js"></script>
 </body>
 </html>

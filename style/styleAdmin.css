@@ -1,8 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
-
 *{
-    margin: 0;
-    padding: 0;
     box-sizing: border-box;
 }
 
@@ -22,10 +18,10 @@ body
 div
 {
     background-color: transparent;
-    border: 2px solid;
+    border: 2px solid white;
     border-radius: 10px;
-    height: 20vh;
-    width: 100vh;
+    height: 28vh;
+    width: 150vh;
     display: flex;
     justify-content: center;
     flex-direction: row;
@@ -33,64 +29,28 @@ div
     
 }
 
-.buttoncardapio
-{
+
+.buttoncardapio,
+.buttoncomanda,
+.buttonpedidocozinha,
+.buttonusuario,
+.buttonmesa {
     padding: 30px;
     margin: 20px;
-    background-color: transparent;
+    background-color: #0c0116;
     border-radius: 10px;
     border-style: solid;
     border-color: #ffffff;
-    box-shadow: 0px 0px 10px #E47B00;
-    background-color: #FFC23A;
     font-family: 'Rubik';
-    
+    font-size: 25px;
+    color: white;
+    box-shadow: 0px 0px 32px 0 rgba(31, 38, 135, 0.37);
+    transition: all 0.3s ease-in-out;
 }
 
-.buttoncomanda
-{
-    padding: 30px;
-    margin: 20px;
-    background-color: transparent;
-    border-radius: 10px;
-    border-style: solid;
-    border-color: #ffffff;
-    box-shadow: 0px 0px 10px #13DC27;
-    background-color: #FFC23A;
-    font-family: 'Rubik';
-}
-
-.buttonpedidocozinha
-{
-    padding: 30px;
-    margin: 20px;
-    background-color: transparent;
-    border-radius: 10px;
-    border-style: solid;
-    border-color: #ffffff;
-    box-shadow: 0px 0px 10px #004EE4;
-    background-color: #FFC23A;
-    font-family: 'Rubik';
-}
-
-.buttonusuario
-{
-    padding: 30px;
-    margin: 20px;
-    background-color: transparent;
-    border-radius: 10px;
-    border-style: solid;
-    border-color: #ffffff;
-    box-shadow: 0px 0px 10px #E40000;
-    background-color: #FFC23A;
-    font-family: 'Rubik';
-}
-
-button:hover{
+button:hover {
     transform: scale(1.1);
     transition: all 0.12s ease-in-out;
     cursor: pointer;
+    box-shadow: 0px 0px 32px 0 rgba(31, 38, 135, 0.37);
 }
-
-
-

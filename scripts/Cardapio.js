@@ -1,4 +1,10 @@
 import {baseUrl,headers} from "./api.js"
+let isAdmin = false
+const usuarioSalvo = localStorage.getItem("usuario");
+        if(usuarioSalvo === "admin@admin.com"){
+            isAdmin =true
+        }
+
 
 // Expondo funções globalmente
 window.removeItem = removeItem;
@@ -7,14 +13,32 @@ window.saveEdit = saveEdit;
 window.showClearAllModal = showClearAllModal;
 window.clearAll = clearAll;
 window.closeModal = closeModal;
+window.showErrorModal = showErrorModal;
 
 console.log(window)
 
 const addBtn = document.querySelector(".add-button")
-addBtn.addEventListener("click",showAddItemModal)
+if(!isAdmin){
+    addBtn.setAttribute("style","display:none;")
+}else{
+
+    addBtn.addEventListener("click",showAddItemModal)
+}
 
 let currentEditItemIndex = null;
-let currentEditItem = null; // Nova variável para armazenar o item completo
+let currentEditItem = null;
+
+function showErrorModal(message) {
+    const modalContent = `
+        <h3>Erro</h3>
+        <p>${message}</p>
+        <div class="modal-buttons">
+            <button class="confirm-button" onclick="window.closeModal('errorModal')">OK</button>
+        </div>
+    `;
+    const modal = createModal('errorModal', modalContent);
+    modal.style.display = 'block';
+}
 
 async function initial() {
     const res = await fetch(`${baseUrl}/CardapioItems`, {
@@ -32,12 +56,14 @@ function loadItems(items) {
         const itemElement = document.createElement('div');
         itemElement.className = 'item';
         itemElement.innerHTML = `
-            <span>${item.titulo} - R$ ${item.preco.toFixed(2)}</span>
+            <span>${item.titulo} 
             <p>${item.descricao}</p>
-            <div class="columnXandPen">
-                <button onclick="window.editItem(${JSON.stringify(item).replace(/"/g, '&quot;')})">✎</button>
-                <button onclick="window.removeItem('${item.id}')">✖</button>
-            </div>
+            R$ ${item.preco.toFixed(2)}</span>
+            <p>Possui preparo: ${item.possuiPreparo ? 'Sim' : 'Não'}</p>
+            ${isAdmin? `<div class="columnXandPen">
+             <button  onclick="window.editItem(${JSON.stringify(item).replace(/"/g, '&quot;')})"  >✎</button>
+              <button onclick="window.removeItem('${item.id}')">✖</button>
+            </div>`:""}
         `;
         
         itemsList.appendChild(itemElement);
@@ -71,38 +97,45 @@ function createModal(id, content) {
 function showAddItemModal() {
     const modalContent = `
         <h3>Adicionar Item</h3>
-        <input type="text" id="addItemInput" placeholder="Nome do item" />
-        <input type="number" id="addItemPrice" placeholder="Preço" step="0.01" />
-        <input type="text" id="addItemDescription" placeholder="Descrição" />
+        <input type="text" id="addItemInput" placeholder="Nome do item" required />
+        <input type="text" id="addItemDescription" placeholder="Descrição" required />
+        <input type="number" id="addItemPrice" placeholder="Preço" step="0.01" required />
+        <div class="checkbox-container">
+        <label for="addItemPreparo">Possui preparo</label>
+            <input type="checkbox" id="addItemPreparo" />
+        </div>
         <button id="addItem">Adicionar</button>
     `;
     const modal = createModal('addItemModal', modalContent);
     modal.style.display = 'block';
     const addItemBtn = document.querySelector("#addItem")
-    addItemBtn.addEventListener("click",addItem)
+    addItemBtn.addEventListener("click", addItem)
 }
 
 function addItem() {
     const nameInput = document.getElementById('addItemInput');
     const priceInput = document.getElementById('addItemPrice');
     const descriptionInput = document.getElementById('addItemDescription');
+    const preparoInput = document.getElementById('addItemPreparo');
     const name = nameInput.value.trim();
     const price = parseFloat(priceInput.value);
     const description = descriptionInput.value.trim();
+    const possuiPreparo = preparoInput.checked;
 
     if (name && !isNaN(price) && description) {
         const newItem = { 
             titulo: name, 
             preco: price, 
             descricao: description, 
-            possuiPreparo: false 
+            possuiPreparo: possuiPreparo 
         }
         addCardapioItemApi(newItem)
         nameInput.value = '';
         priceInput.value = '';
         descriptionInput.value = '';
+        preparoInput.checked = false;
     } else {
-        alert('Por favor, insira um nome, um preço e uma descrição válidos.');
+        showErrorModal('Por favor, insira um nome, um preço e uma descrição válidos.');
     }
 }
 
@@ -130,22 +163,27 @@ async function removeItem(id) {
         if(res.ok) {
             initial();
         } else {
-            alert('Erro ao remover o item.');
+            showErrorModal('Erro ao remover o item.');
         }
     } catch (error) {
         console.error('Erro ao remover item:', error);
-        alert('Erro ao remover o item.');
+        showErrorModal('Erro ao remover o item.');
     }
 }
 
 function editItem(item) {
     currentEditItemIndex = item.id;
-    currentEditItem = item; // Armazenando o item completo
+    currentEditItem = item;
     const modalContent = `
         <h3>Editar Item</h3>
-        <input type="text" id="editInput" value="${item.titulo}" />
-        <input type="number" id="editPrice" value="${item.preco.toFixed(2)}" step="0.01" />
-        <input type="text" id="editDescription" value="${item.descricao}" />
+       
+        <input type="text" id="editInput" placeholder="Nome do item" value="${item.titulo}" required />
+        <input type="text" id="editDescription" placeholder="Descrição" value="${item.descricao}" required />
+        <input type="number" id="editPrice" placeholder="Preço" value="${item.preco.toFixed(2)}" step="0.01" required />
+        <div class="checkbox-container">
+        <label for="editItemPreparo">Possui preparo</label>
+            <input type="checkbox" id="editItemPreparo" ${item.possuiPreparo ? 'checked' : ''} />
+        </div>
         <button id="editSaveEdit" onclick="window.saveEdit()">Salvar</button>
     `;
     const modal = createModal('editModal', modalContent);
@@ -156,16 +194,19 @@ async function saveEdit() {
     const nameInput = document.getElementById('editInput');
     const priceInput = document.getElementById('editPrice');
     const descriptionInput = document.getElementById('editDescription');
+    const preparoInput = document.getElementById('editItemPreparo');
     const name = nameInput.value.trim();
     const price = parseFloat(priceInput.value);
     const description = descriptionInput.value.trim();
+    const possuiPreparo = preparoInput.checked;
 
     if (name && !isNaN(price) && description) {
         const updatedItem = {
-            ...currentEditItem, // Mantém todos os campos originais
+            ...currentEditItem,
             titulo: name,
             preco: price,
             descricao: description,
+            possuiPreparo: possuiPreparo
         };
 
         try {
@@ -184,14 +225,14 @@ async function saveEdit() {
             } else {
                 const errorData = await res.json();
                 console.error('Erro na resposta:', errorData);
-                alert('Erro ao atualizar o item. Verifique o console para mais detalhes.');
+                showErrorModal('Erro ao atualizar o item. Verifique o console para mais detalhes.');
             }
         } catch (error) {
             console.error('Erro ao atualizar item:', error);
-            alert('Erro ao atualizar o item.');
+            showErrorModal('Erro ao atualizar o item.');
         }
     } else {
-        alert('Por favor, insira um nome, um preço e uma descrição válidos.');
+        showErrorModal('Por favor, insira um nome, um preço e uma descrição válidos.');
     }
 }
 
@@ -227,7 +268,7 @@ async function clearAll() {
         initial();
     } catch (error) {
         console.error('Erro ao limpar todos os itens:', error);
-        alert('Erro ao limpar todos os itens.');
+        showErrorModal('Erro ao limpar todos os itens.');
     }
 }
 
@@ -238,6 +279,6 @@ function closeModal(modalId) {
         document.body.removeChild(modal);
     }
 }
-
+        
 // Inicializar a aplicação
 initial();
