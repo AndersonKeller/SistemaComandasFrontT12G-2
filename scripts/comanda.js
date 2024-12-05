@@ -177,7 +177,7 @@ function adicionarItem(item) {
         li.innerHTML = `
             <span>${item.titulo} - R$ ${item.preco.toFixed(2)}</span>
             <button class="remove-item" onclick="removerItem('${itemId}', ${item.preco})">
-                <i class="fas fa-trash">X</i>
+                <i class="fas fa-trash"></i>
             </button>
         `;
         itensSelecionados.appendChild(li);

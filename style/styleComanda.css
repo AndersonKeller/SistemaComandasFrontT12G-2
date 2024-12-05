@@ -13,7 +13,7 @@
 * {
     box-sizing: border-box;
     scrollbar-width: thin;
-    scrollbar-color: #252525 #00000000;
+    scrollbar-color: #ffffff #afafaf;
 }
 
 body {
@@ -82,7 +82,7 @@ button {
 }
 
 .comanda-card {
-    background: linear-gradient(214deg, #8539eb, #ffffff 312px);
+    background: white;
     border-radius: var(--border-radius);
     padding: 20px;
     box-shadow: var(--shadow);
@@ -167,7 +167,7 @@ button {
     max-width: 800px;
     border-radius: var(--border-radius);
     position: relative;
-    max-height: 90vh;
+    max-height: 84vh;
     overflow-y: auto;
 }
 
@@ -183,6 +183,7 @@ button {
 }
 .close:hover{
     color: #333;
+    transform: none;
 }
 
 .form-group {

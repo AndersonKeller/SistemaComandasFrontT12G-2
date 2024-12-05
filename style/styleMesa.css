@@ -1,5 +1,7 @@
 * {
     box-sizing: border-box;
+    scrollbar-width: thin;
+    scrollbar-color: #252525 #00000000;
 }
 
 :root {
@@ -215,6 +217,9 @@ body {
 }
 
 .close {
+    top: 18px;
+    right: 22px;
+    position: absolute;
     background: none;
     border: none;
     font-size: 1.5rem;
